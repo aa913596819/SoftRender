@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B58F4EB24E0081F00B33D07 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B58F4EA24E0081F00B33D07 /* Vector2.cpp */; };
+		2B8814EF24DF9835004E4B7B /* tgaimage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B8814ED24DF9835004E4B7B /* tgaimage.cpp */; };
+		2B8814F224DF9D99004E4B7B /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B8814F124DF9D99004E4B7B /* platform.cpp */; };
 		2BFCCF4424DC3BAD00702712 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BFCCF4324DC3BAD00702712 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +26,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2B58F4E924E0047600B33D07 /* Vector2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector2.h; sourceTree = "<group>"; };
+		2B58F4EA24E0081F00B33D07 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
+		2B8814ED24DF9835004E4B7B /* tgaimage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tgaimage.cpp; sourceTree = "<group>"; };
+		2B8814EE24DF9835004E4B7B /* tgaimage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tgaimage.h; sourceTree = "<group>"; };
+		2B8814F124DF9D99004E4B7B /* platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform.cpp; sourceTree = "<group>"; };
 		2BFCCF4024DC3BAD00702712 /* SoftRender */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SoftRender; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BFCCF4324DC3BAD00702712 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -38,6 +46,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B58F4EC24E0090200B33D07 /* Math */ = {
+			isa = PBXGroup;
+			children = (
+				2B58F4EE24E0091C00B33D07 /* inc */,
+				2B58F4ED24E0090A00B33D07 /* src */,
+			);
+			path = Math;
+			sourceTree = "<group>";
+		};
+		2B58F4ED24E0090A00B33D07 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2B58F4EA24E0081F00B33D07 /* Vector2.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		2B58F4EE24E0091C00B33D07 /* inc */ = {
+			isa = PBXGroup;
+			children = (
+				2B58F4E924E0047600B33D07 /* Vector2.h */,
+			);
+			path = inc;
+			sourceTree = "<group>";
+		};
+		2B58F4EF24E0094700B33D07 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				2BFCCF4324DC3BAD00702712 /* main.cpp */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		2B8814F024DF9D01004E4B7B /* Window */ = {
+			isa = PBXGroup;
+			children = (
+				2B8814F124DF9D99004E4B7B /* platform.cpp */,
+			);
+			path = Window;
+			sourceTree = "<group>";
+		};
 		2BFCCF3724DC3BAD00702712 = {
 			isa = PBXGroup;
 			children = (
@@ -57,7 +106,11 @@
 		2BFCCF4224DC3BAD00702712 /* SoftRender */ = {
 			isa = PBXGroup;
 			children = (
-				2BFCCF4324DC3BAD00702712 /* main.cpp */,
+				2B8814F024DF9D01004E4B7B /* Window */,
+				2B58F4EF24E0094700B33D07 /* core */,
+				2B58F4EC24E0090200B33D07 /* Math */,
+				2B8814ED24DF9835004E4B7B /* tgaimage.cpp */,
+				2B8814EE24DF9835004E4B7B /* tgaimage.h */,
 			);
 			path = SoftRender;
 			sourceTree = "<group>";
@@ -119,6 +172,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B8814EF24DF9835004E4B7B /* tgaimage.cpp in Sources */,
+				2B58F4EB24E0081F00B33D07 /* Vector2.cpp in Sources */,
+				2B8814F224DF9D99004E4B7B /* platform.cpp in Sources */,
 				2BFCCF4424DC3BAD00702712 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
