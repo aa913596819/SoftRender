@@ -26,16 +26,8 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
     glfwMakeContextCurrent(win);
-    
-    Vector2i t0[3] = {Vector2i(10, 70),   Vector2i(50, 160),  Vector2i(70, 80)};
-    Vector2i t1[3] = {Vector2i(180, 50),  Vector2i(150, 1),   Vector2i(70, 180)};
-    Vector2i t2[3] = {Vector2i(180, 150), Vector2i(120, 160), Vector2i(130, 180)};
-    
     while(!glfwWindowShouldClose(win)){
         frameBuffer.clear(Color::Black);
-//        drawTriangle(t0[0], t0[1], t0[2], frameBuffer, Color::Red);
-//        drawTriangle(t1[0], t1[1], t1[2], frameBuffer, Color::White);
-//        drawTriangle(t2[0], t2[1], t2[2], frameBuffer, Color::Green);
         drawMesh(dogMesh, frameBuffer, Color::White);
         frameBuffer.draw();
         glfwSwapBuffers(win);

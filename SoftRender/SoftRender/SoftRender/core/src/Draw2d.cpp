@@ -77,9 +77,12 @@ void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col)
 }
 void drawMesh(Mesh* mesh,FrameBuffer& targetFrame,const Color& col)
 {
-    for (int i=0; i<mesh->facesNum(); i++) {
+#ifdef POLYGON_MODE_LINE
+    for (int i=0; i<mesh->facesNum(); i++)
+    {
            std::vector<int> face = mesh->facesVector[i];
-           for (int j=0; j<3; j++) {
+           for (int j=0; j<3; j++)
+           {
                Vector3f v0 = mesh->vertsVector[face[j]];
                Vector3f v1 = mesh->vertsVector[face[(j+1)%3]];
                int x0 = (v0.x+1.)/2.0f *(targetFrame.getWidth()-1);//[-1,1]->[0,1]
@@ -89,6 +92,22 @@ void drawMesh(Mesh* mesh,FrameBuffer& targetFrame,const Color& col)
                drawLine(x0, y0, x1, y1, targetFrame, col);
            }
        }
+#else
+    for(int i = 0;i<mesh->facesNum();i++)
+    {
+        std::vector<int> face = mesh->facesVector[i];
+        Vector3f v0 = mesh->vertsVector[face[0]];
+        Vector3f v1 = mesh->vertsVector[face[1]];
+        Vector3f v2 = mesh->vertsVector[face[2]];
+        int x0 = (v0.x+1.)/2.0f *(targetFrame.getWidth()-1);//[-1,1]->[0,1]
+        int y0 = (v0.y+1.)/2.0f * (targetFrame.getHeight()-1);
+        int x1 = (v1.x+1.)/2.0f * (targetFrame.getWidth()-1);
+        int y1 = (v1.y+1.)/2.0f * (targetFrame.getHeight()-1);
+        int x2 = (v2.x+1.)/2.0f * (targetFrame.getWidth()-1);
+        int y2 = (v2.y+1.)/2.0f * (targetFrame.getHeight()-1);
+        drawTriangle(Vector2i(x0,y0), Vector2i(x1,y1), Vector2i(x2,y2), targetFrame, col);
+    }
+#endif
 }
 
 #if 0
@@ -115,38 +134,6 @@ void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,c
     int segmentHeight0 =p1.y-p0.y+1;
     int segmentHeight1 =p2.y-p1.y+1;
     //原理很简单，即一次向y方向步进一个点，同时通过差值的方式计算x的坐标
-//    for(int y = p0.y;y<=p1.y;y++)
-//    {
-//        float a = static_cast<float>(y - p0.y)/totalHeight;
-//        float b = static_cast<float>(y - p0.y)/segmentHeight0;
-//        int x0 = p0.x +(p2.x-p0.x)*a;
-//        int x1 = p0.x +(p1.x-p0.x)*b;
-//        if(x0>x1)
-//        {
-//            std::swap(x0,x1);
-//        }
-//        for(int x =x0;x<=x1;x++)
-//        {
-//            targetFrame.drawPixel(x, y, col);
-//        }
-//    }
-//    int segmentHeight1 =p2.y-p1.y+1;
-//    for(int y = p1.y;y<=p2.y;y++)
-//    {
-//        float a = static_cast<float>(y - p0.y)/totalHeight;
-//        float b = static_cast<float>(y - p1.y)/segmentHeight1;
-//        int x0 = p0.x +(p2.x-p0.x)*a;
-//        int x1 = p1.x +(p2.x-p1.x)*b;
-//        if(x0>x1)
-//        {
-//            std::swap(x0,x1);
-//        }
-//        for(int x =x0;x<=x1;x++)
-//        {
-//            targetFrame.drawPixel(x, y, col);
-//        }
-//    }
-//
     for(int y = p0.y;y<=p2.y;y++)
     {
         bool isUpper = y>p1.y || p1.y==p0.y;
@@ -170,20 +157,38 @@ void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,c
 //重心坐标法 扫描线算法
 //三角形所在平面的所有点 都可以用重心坐标表示，且坐标和为1.
 //三角形内部的点 坐标都为[0,1],该算法通过遍历三角形的BBOX内所有的点来实现填充
-
-//该函数返回
-//Vector3f barycentric(Vector2i* triangles,Vector2i p)
-//{
-//    Vector3f a(triangles[2].x-triangles[0].x,triangles[1].x-triangles[0].x,triangles[0].x-p.x);
-//    Vector3f b(triangles[2].y-triangles[0].y,triangles[1].y-triangles[0].y,triangles[0].y-p.y);
-//    Vector3f bary = Cross(a, b);
-//    if(bary.z<1.0f)
-//    {
-//        return Vector3f(-1.0f,1.0f,1.0f);
-//    }
-//    return Vector3f(1.0f-(u.x+u.y)/u.z, u.y/u.z, u.x/u.z);
-//}
-//void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,const Color& col)
-//{
 //
-//}
+Vector3f barycentric(Vector2i p0,Vector2i p1,Vector2i p2,Vector2i p)
+{
+    Vector3f a(p2.x-p0.x,p1.x-p0.x,p0.x-p.x);
+    Vector3f b(p2.y-p0.y,p1.y-p0.y,p0.y-p.y);
+    Vector3f bary = Cross(a, b);
+    if(bary.z<1.0f)
+    {
+        return Vector3f(-1.0f,1.0f,1.0f);
+    }
+    //因为我们的三角形顶点没有做排序，可能所有点都是负数。所以/z 使得同号为正。
+    return Vector3f(1.0f-(bary.x+bary.y)/bary.z, bary.y/bary.z, bary.x/bary.z);
+}
+void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,const Color& col)
+{
+    Vector2i bboxMin(0,0);
+    Vector2i bboxMax(0,0);
+    
+    bboxMin.x = std::min(p0.x,std::min(p1.x,p2.x));
+    bboxMin.y = std::min(p0.y,std::min(p1.y,p2.y));
+    bboxMax.x = std::max(p0.x,std::max(p1.x,p2.x));
+    bboxMax.y = std::max(p0.y,std::max(p1.y,p2.y));
+    
+    for(int x= bboxMin.x;x<=bboxMax.x;x++)
+    {
+        for(int y= bboxMin.y;y<=bboxMax.y;y++)
+        {
+            Vector3f bary =barycentric(p0,p1,p2,Vector2i(x,y));
+            if(bary.x>=0&&bary.y>=0&&bary.z>=0)
+            {
+                targetFrame.drawPixel(x,y,col);
+            }
+        }
+    }
+}
