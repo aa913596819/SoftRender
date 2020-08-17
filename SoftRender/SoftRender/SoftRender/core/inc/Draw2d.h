@@ -6,9 +6,20 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#ifndef Draw2d_hpp
-#define Draw2d_hpp
+#ifndef DRAW2D_H
+#define DRAW2D_H
+#include"Vector2.h"
+#include"Mesh.h"
+#include"tgaimage.h"
+#include"FrameBuffer.h"
+#include"Color.h"
+void drawPoint(int x0,int y0,FrameBuffer& targetFrame,const Color& col);
+void drawPoint(Vector2i p,FrameBuffer& targetFrame,const Color& col);
+//Bresenham
+void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col);
+void drawLine(int x0,int y0,int x1,int y1,FrameBuffer &targetFrame,const Color& col);
+void drawMesh(Mesh* mesh,FrameBuffer& targetFrame,const Color& col);
 
-#include <stdio.h>
-
-#endif /* Draw2d_hpp */
+//
+void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,const Color& col);
+#endif /* Draw2d_h */

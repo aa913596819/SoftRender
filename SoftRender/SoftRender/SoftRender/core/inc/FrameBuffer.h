@@ -8,16 +8,25 @@
 
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Color.h"
 //这里暂定用数组存储Buffer
 class FrameBuffer
 {
 private:
-    unsigned int width,height,channels;
-    unsigned char ColorBuffer[];
+    int width,height,channels;
+    unsigned char* ColorBuffer;
 public:
-    FrameBuffer(const unsigned int& width,const unsigned int& height,const unsigned int& channels);
-    
-}
+    FrameBuffer(const int& w,const  int& h,const  int& c);
+    void clear(const Color &col);
+    ~FrameBuffer();
+    int getWidth();
+    int getHeight();
+    int getChannels();
+    void drawPixel(int x,int y,const Color& col);
+    void draw();
+};
 
 
 

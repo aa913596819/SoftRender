@@ -16,7 +16,10 @@ public:
     std::vector<Vector3f> vertsVector;
     std::vector<std::vector<int>> facesVector;
     Mesh(const char* fileName);
-    ~Mesh();
+    ~Mesh()
+    {
+        
+    }
     int facesNum();
     int vertsNum();
 
