@@ -9,11 +9,14 @@
 #ifndef MESH_H
 #define MESH_H
 #include"Vector3.h"
+#include"Vector2.h"
 #include<vector>
 class Mesh
 {
 public:
     std::vector<Vector3f> vertsVector;
+    std::vector<Vector2f> uvsVector;
+    std::vector<Vector3f> normalsVector;
     std::vector<std::vector<int>> facesVector;
     Mesh(const char* fileName);
     ~Mesh()

@@ -13,6 +13,7 @@ class Color
 {
 public:
     Color(float r, float g, float b,float a=1.0f);
+    Color();
     Color(unsigned char r, unsigned char g,unsigned char b, unsigned char a=255);
     
     bool operator==(const Color& rhs);

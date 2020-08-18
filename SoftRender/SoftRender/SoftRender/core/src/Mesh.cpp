@@ -23,6 +23,7 @@ Mesh::Mesh(const char* fileName)
     }
     std::string line;
     float vert[3];
+    float uv[2];
     while (!objFile.eof()) {
         std::getline(objFile, line);
         std::istringstream iss(line.c_str());
@@ -35,6 +36,24 @@ Mesh::Mesh(const char* fileName)
                 iss >> vert[i];
             }
             vertsVector.push_back(Vector3f(vert[0],vert[1],vert[2]));
+        }
+        else if (!line.compare(0, 4, "vt  "))
+        {
+            iss >> trash>>trash;
+            for (int i=0;i<2;i++)
+            {
+                iss >> uv[i];
+            }
+            uvsVector.push_back(Vector2f(uv[0],uv[1]));
+        }
+        else if (!line.compare(0, 4, "vn  "))
+        {
+            iss >> trash>>trash;
+            for (int i=0;i<3;i++)
+            {
+                iss >> vert[i];
+            }
+            normalsVector.push_back(Vector3f(vert[0],vert[1],vert[2]));
         }
         else if (!line.compare(0, 2, "f "))
         {
@@ -49,7 +68,7 @@ Mesh::Mesh(const char* fileName)
             facesVector.push_back(f);
         }
     }
-    std::cout<<static_cast<int>(vertsVector.size());
+//    std::cout<<static_cast<int>(vertsVector.size());
 }
 int Mesh::facesNum()
 {

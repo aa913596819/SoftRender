@@ -9,7 +9,7 @@
 #define __IMAGE_H__
 
 #include <fstream>
-
+#include "Color.h"
 #pragma pack(push,1)
 struct TGA_Header {
     char idlength;
@@ -90,6 +90,7 @@ public:
     bool flip_vertically();
     bool scale(int w, int h);
     TGAColor get(int x, int y);
+    Color getColor(int x, int y);
     bool set(int x, int y, TGAColor c);
     ~TGAImage();
     TGAImage & operator =(const TGAImage &img);

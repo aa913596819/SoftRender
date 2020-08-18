@@ -71,12 +71,12 @@ inline void Vector3f::zero()
     y = 0.0f;
     z = 0.0f;
 }
-inline void Vector3f::normalize()
+void Vector3f::normalize()
 {
     float temp = x * x + y * y + z * z;
     float inverseTemp = 1.0f / std::sqrt(temp);
-    x /=inverseTemp;
-    y /=inverseTemp;
-    z /=inverseTemp;
+    x *=inverseTemp;
+    y *=inverseTemp;
+    z *=inverseTemp;
 }
 

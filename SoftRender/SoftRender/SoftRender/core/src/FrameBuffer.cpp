@@ -12,11 +12,17 @@
 FrameBuffer:: FrameBuffer(const  int& w,const  int& h,const  int& c):width(w),height(h),channels(c)
 {
     ColorBuffer = new unsigned char[width*height*channels];
+    Zbuffer = new float[width*height];
+    for(int i =0 ;i<width*height;i++)
+    {
+        Zbuffer[i]= -std::numeric_limits<int>::max();
+    }
 }
 
 FrameBuffer::~FrameBuffer()
 {
     delete [] ColorBuffer;
+    delete [] Zbuffer;
 }
 
  int FrameBuffer::getWidth()
@@ -72,6 +78,14 @@ void FrameBuffer::clear(const Color &col)
             ColorBuffer[index] = col.r*255;
             ColorBuffer[index+1] = col.g*255;
             ColorBuffer[index+2] = col.b*255;
+        }
+    }
+    for(int i = 0;i<width;i++)
+    {
+        for(int j =0;j<height;j++)
+        {
+            int index =(j*width+i);
+            Zbuffer[index] =- std::numeric_limits<int>::max();
         }
     }
 }

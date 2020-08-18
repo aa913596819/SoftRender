@@ -18,6 +18,7 @@ private:
     int width,height,channels;
     unsigned char* ColorBuffer;
 public:
+    float* Zbuffer;
     FrameBuffer(const int& w,const  int& h,const  int& c);
     void clear(const Color &col);
     ~FrameBuffer();

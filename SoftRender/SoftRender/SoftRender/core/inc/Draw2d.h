@@ -18,8 +18,7 @@ void drawPoint(Vector2i p,FrameBuffer& targetFrame,const Color& col);
 //Bresenham
 void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col);
 void drawLine(int x0,int y0,int x1,int y1,FrameBuffer &targetFrame,const Color& col);
-void drawMesh(Mesh* mesh,FrameBuffer& targetFrame,const Color& col);
-
+void drawMesh(Mesh* mesh,FrameBuffer& targetFrame);
 //
-void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,const Color& col);
+void drawTriangle(Vector3f p0,Vector3f p1,Vector3f p2,FrameBuffer& targetFrame,const Color& col);
 #endif /* Draw2d_h */

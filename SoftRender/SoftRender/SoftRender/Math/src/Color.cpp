@@ -13,6 +13,10 @@ const Color Color::Black(0.0f,0.0f,0.0f);
 const Color Color::Red(1.0f,0.0f,0.0f);
 const Color Color::Green(0.0f,1.0f,0.0f);
 const Color Color::Blue(0.0f,0.0f,1.0f);
+Color::Color():r(0.0f),g(0.0f),b(0.0f),a(1.0f)
+{
+    
+}
 Color::Color(float inR, float inG, float inB,float inA):r(inR),g(inG),b(inB),a(inA)
 {
     
