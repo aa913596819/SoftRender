@@ -14,9 +14,9 @@
             filePath = "SoftRender/core/src/Draw2d.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "drawMesh(mesh, targetFrame)"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "barycentric(p0, p1, p2, p)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

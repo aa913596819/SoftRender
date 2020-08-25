@@ -158,12 +158,8 @@ void drawTriangle(Vector3f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& t
                                            (uvs[0].x *bary.x + uvs[1].x *bary.y + uvs[2].x *bary.z)*(diffuse.get_width()),
                                            (uvs[0].y *bary.x + uvs[1].y *bary.y + uvs[2].y *bary.z)*(diffuse.get_height())
                                            );
-                    Vector2i pos = Vector2i(
-                                           (screen_coords[0].x *bary.x + screen_coords[1].x *bary.y + screen_coords[2].x *bary.z),
-                                           (screen_coords[0].y *bary.x + screen_coords[1].y *bary.y + screen_coords[2].y *bary.z)
-                                           );
                     targetFrame.Zbuffer[zIndex]=z;
-                    targetFrame.drawPixel(pos.x,pos.y,diffuse.getColor(uv.x, uv.y));
+                    targetFrame.drawPixel(p.x,p.y,diffuse.getColor(uv.x, uv.y));
                 }
             }
         }
