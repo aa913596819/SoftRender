@@ -13,19 +13,25 @@
 #include<vector>
 class Mesh
 {
-public:
+private:
     std::vector<Vector3f> vertsVector;
     std::vector<Vector2f> uvsVector;
     std::vector<Vector3f> normalsVector;
-    std::vector<std::vector<int>> facesVector;
+    std::vector<std::vector<Vector3i>> facesVector;
+public:
     Mesh(const char* fileName);
     ~Mesh()
     {
-        
     }
     int facesNum();
     int vertsNum();
-
+    int normalsNum();
+    int uvsNum();
+    //返回的是构成该三角形的 三个顶点位置的索引
+    std::vector<int>getFace(int index);
+    Vector3f getVertex(int index);
+    Vector3f getNormal(int index);
+    Vector2f getUV(int faceIndex,int vertexIndex);
 };
 
 #endif /* Mesh_h */

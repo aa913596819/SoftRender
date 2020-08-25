@@ -7,17 +7,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "277CBF2E-100E-44CF-8BAF-55861CA2FE85"
-            shouldBeEnabled = "Yes"
+            uuid = "A8F43896-C271-4273-A7F6-66251EB7F052"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SoftRender/core/main.cpp"
+            filePath = "SoftRender/core/src/Draw2d.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "triangle(p0, p1, p2, uv0, uv1, uv2, frambuffer, diffuseTex)"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "drawMesh(mesh, targetFrame)"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C460CC79-E25A-4AE9-885E-3A86194D4D95"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SoftRender/core/src/FrameBuffer.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "FrameBuffer::drawPixel(x, y, col)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

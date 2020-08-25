@@ -9,6 +9,7 @@
 #include"Draw2d.h"
 #include<cmath>
 #include"Vector3.h"
+#include<iostream>
 void swap(int& a, int& b)
 {
     int temp = a;
@@ -23,11 +24,12 @@ void drawPoint(Vector2i p,FrameBuffer& targetFrame,const Color& col)
 {
     targetFrame.drawPixel(p.x, p.y, col);
 }
+
+
 void drawLine(int x0,int y0,int x1,int y1,FrameBuffer& targetFrame,const Color& col)
 {
     //首先检测x、y方向哪个方向更陡峭。向更陡峭的方向步进，一个极端的例子 x方向只移动一格，
     //而y方向移动10格
-
     bool isSteep = false;
     if(std::abs(x0-x1)>std::abs(y0-y1))
     {
@@ -77,54 +79,42 @@ void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col)
 }
 void drawMesh(Mesh* mesh,FrameBuffer& targetFrame)
 {
-#ifdef POLYGON_MODE_LINE
-    for (int i=0; i<mesh->facesNum(); i++)
-    {
-           std::vector<int> face = mesh->facesVector[i];
-           for (int j=0; j<3; j++)
-           {
-               Vector3f v0 = mesh->vertsVector[face[j]];
-               Vector3f v1 = mesh->vertsVector[face[(j+1)%3]];
-               int x0 = (v0.x+1.)/2.0f *(targetFrame.getWidth()-1);//[-1,1]->[0,1]
-               int y0 = (v0.y+1.)/2.0f * (targetFrame.getHeight()-1);
-               int x1 = (v1.x+1.)/2.0f * (targetFrame.getWidth()-1);
-               int y1 = (v1.y+1.)/2.0f * (targetFrame.getHeight()-1);
-               drawLine(x0, y0, x1, y1, targetFrame, col);
-           }
-       }
-#else
-    
     Vector3f light_dir(0,0,-1);
+    TGAImage diffuseTex;
+    diffuseTex.read_tga_file("/Users/bytedance/Desktop/african_head_diffuse.tga");
+    diffuseTex.flip_vertically();
+    
     for (int i=0; i<mesh->facesNum(); i++)
     {
-        std::vector<int> face = mesh->facesVector[i];
+        std::vector<int> face = mesh->getFace(i);
         Vector2f texture_coords[3];
-        Vector3f normals[3];
         Vector3f world_coords[3];
+        Vector3f normals[3];
         for (int j=0; j<3; j++) {
-            world_coords[j]  = mesh->vertsVector[face[j]];
-            texture_coords[j] = mesh->uvsVector[face[j]];
-            normals[j] = mesh->normalsVector[face[j]];
+            world_coords[j]  = mesh->getVertex(face[j]);
+            normals[j] =mesh->getNormal(face[j]);
         }
         Vector3f vec0 =world_coords[2]-world_coords[0];
         Vector3f vec1 =world_coords[1]-world_coords[0];
-
         Vector3f n = Cross(vec0, vec1);
-//        Vector3f n = (normals[0]+normals[1]+normals[2])/3.0f;
+        
+        for(int k=0; k<3; k++)
+        {
+            texture_coords[k]=mesh->getUV(i,k);
+        }
         n.normalize();
         float intensity = Dot(n,light_dir);
         Color col(intensity,intensity,intensity);
-        drawTriangle(world_coords[0], world_coords[1],world_coords[2],targetFrame,col);
-//                triangle(screen_coords[0], screen_coords[1], screen_coords[2], texture_coords[0], texture_coords[1], texture_coords[2], frameBuffer,diffuseTex);
+        drawTriangle(&world_coords[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex);
     }
-#endif
 }
 
 //重心坐标法 扫描线算法
 //三角形所在平面的所有点 都可以用重心坐标表示，且坐标和为1.
 //三角形内部的点 坐标都为[0,1],该算法通过遍历三角形的BBOX内所有的点来实现填充
 //
-Vector3f barycentric(Vector2i p0,Vector2i p1,Vector2i p2,Vector2i p)
+template<typename T0,typename T1>
+Vector3f barycentric(Vector2<T0>p0,Vector2<T0>p1,Vector2<T0>p2,Vector3<T1>p)
 {
     Vector3f a(p2.x-p0.x,p1.x-p0.x,p0.x-p.x);
     Vector3f b(p2.y-p0.y,p1.y-p0.y,p0.y-p.y);
@@ -136,38 +126,63 @@ Vector3f barycentric(Vector2i p0,Vector2i p1,Vector2i p2,Vector2i p)
     //因为我们的三角形顶点没有做排序，可能所有点都是负数。所以/z 使得同号为正。
     return Vector3f(1.0f-(bary.x+bary.y)/bary.z, bary.y/bary.z, bary.x/bary.z);
 }
-void drawTriangle(Vector3f p0,Vector3f p1,Vector3f p2,FrameBuffer& targetFrame,const Color& col)
+
+void drawTriangle(Vector3f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse)
 {
     Vector2i bboxMin(0,0);
     Vector2i bboxMax(0,0);
     
     Vector2i screen_coords[3];
-    screen_coords[0] = Vector2i((p0.x+1.)*(targetFrame.getWidth()-1)/2., (p0.y+1.)*(targetFrame.getHeight()-1)/2.);
-    screen_coords[1] = Vector2i((p1.x+1.)*(targetFrame.getWidth()-1)/2., (p1.y+1.)*(targetFrame.getHeight()-1)/2.);
-    screen_coords[2] = Vector2i((p2.x+1.)*(targetFrame.getWidth()-1)/2., (p2.y+1.)*(targetFrame.getHeight()-1)/2.);
+    screen_coords[0] = Vector2i((verts[0].x+1.)*(targetFrame.getWidth()-1)/2., (verts[0].y+1.)*(targetFrame.getHeight()-1)/2.);
+    screen_coords[1] = Vector2i((verts[1].x+1.)*(targetFrame.getWidth()-1)/2., (verts[1].y+1.)*(targetFrame.getHeight()-1)/2.);
+    screen_coords[2] = Vector2i((verts[2].x+1.)*(targetFrame.getWidth()-1)/2., (verts[2].y+1.)*(targetFrame.getHeight()-1)/2.);
     
     bboxMin.x = std::min(screen_coords[0].x,std::min(screen_coords[1].x,screen_coords[2].x));
     bboxMin.y = std::min(screen_coords[0].y,std::min(screen_coords[1].y,screen_coords[2].y));
     bboxMax.x = std::max(screen_coords[0].x,std::max(screen_coords[1].x,screen_coords[2].x));
     bboxMax.y = std::max(screen_coords[0].y,std::max(screen_coords[1].y,screen_coords[2].y));
 
-    for(int x= bboxMin.x;x<=bboxMax.x;x++)
+    Vector3f p;
+    for(p.x= bboxMin.x;p.x<=bboxMax.x;p.x++)
     {
-        for(int y= bboxMin.y;y<=bboxMax.y;y++)
+        for(p.y= bboxMin.y;p.y<=bboxMax.y;p.y++)
         {
-            Vector3f bary =barycentric(screen_coords[0],screen_coords[1],screen_coords[2],Vector2i(x,y));
+            Vector3f bary =barycentric(screen_coords[0],screen_coords[1],screen_coords[2],p);
             if(bary.x>=0&&bary.y>=0&&bary.z>=0)
             {
-                float z = p0.z *bary.x + p1.z *bary.y + p2.z *bary.z;
-                if(targetFrame.Zbuffer[x+y*targetFrame.getWidth()]<z)
+                float z = verts[0].z *bary.x + verts[1].z *bary.y + verts[2].z *bary.z;
+                int zIndex =p.x+p.y*targetFrame.getWidth();
+                if(targetFrame.Zbuffer[zIndex]<z)
                 {
-                    targetFrame.Zbuffer[x+y*targetFrame.getWidth()]=z;
-                    targetFrame.drawPixel(x,y,col);
+                    Vector2i uv = Vector2i(
+                                           (uvs[0].x *bary.x + uvs[1].x *bary.y + uvs[2].x *bary.z)*(diffuse.get_width()),
+                                           (uvs[0].y *bary.x + uvs[1].y *bary.y + uvs[2].y *bary.z)*(diffuse.get_height())
+                                           );
+                    Vector2i pos = Vector2i(
+                                           (screen_coords[0].x *bary.x + screen_coords[1].x *bary.y + screen_coords[2].x *bary.z),
+                                           (screen_coords[0].y *bary.x + screen_coords[1].y *bary.y + screen_coords[2].y *bary.z)
+                                           );
+                    targetFrame.Zbuffer[zIndex]=z;
+                    targetFrame.drawPixel(pos.x,pos.y,diffuse.getColor(uv.x, uv.y));
                 }
             }
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -214,3 +229,5 @@ void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,c
     }
 }
 #endif
+
+    

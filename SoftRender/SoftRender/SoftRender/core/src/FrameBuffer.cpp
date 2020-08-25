@@ -43,7 +43,10 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::drawPixel(int x,int y,const Color& col)
 {
-    
+//    if()
+//    {
+//        std::cout<<"a";
+//    }
     int index =(y*width+x)*channels;
     if(channels == 4)
     {

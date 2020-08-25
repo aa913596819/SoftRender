@@ -15,60 +15,40 @@
 //读取obj文件
 Mesh::Mesh(const char* fileName)
 {
-    std::ifstream objFile;
-    objFile.open(fileName);
-    if(objFile.fail())
-    {
-        return;
-    }
+    std::ifstream in;
+    in.open (fileName, std::ifstream::in);
+    if (in.fail()) return;
     std::string line;
-    float vert[3];
-    float uv[2];
-    while (!objFile.eof()) {
-        std::getline(objFile, line);
+    while (!in.eof()) {
+        std::getline(in, line);
         std::istringstream iss(line.c_str());
         char trash;
-        if (!line.compare(0, 2, "v "))
-        {
+        if (!line.compare(0, 2, "v ")) {
             iss >> trash;
-            for (int i=0;i<3;i++)
-            {
-                iss >> vert[i];
-            }
-            vertsVector.push_back(Vector3f(vert[0],vert[1],vert[2]));
-        }
-        else if (!line.compare(0, 4, "vt  "))
-        {
-            iss >> trash>>trash;
-            for (int i=0;i<2;i++)
-            {
-                iss >> uv[i];
-            }
-            uvsVector.push_back(Vector2f(uv[0],uv[1]));
-        }
-        else if (!line.compare(0, 4, "vn  "))
-        {
-            iss >> trash>>trash;
-            for (int i=0;i<3;i++)
-            {
-                iss >> vert[i];
-            }
-            normalsVector.push_back(Vector3f(vert[0],vert[1],vert[2]));
-        }
-        else if (!line.compare(0, 2, "f "))
-        {
-            std::vector<int> f;
-            int itrash, idx;
+            Vector3f v;
+            for (int i=0;i<3;i++) iss >> v[i];
+            vertsVector.push_back(v);
+        } else if (!line.compare(0, 3, "vn ")) {
+            iss >> trash >> trash;
+            Vector3f n;
+            for (int i=0;i<3;i++) iss >> n[i];
+            normalsVector.push_back(n);
+        } else if (!line.compare(0, 3, "vt ")) {
+            iss >> trash >> trash;
+            Vector2f uv;
+            for (int i=0;i<2;i++) iss >> uv[i];
+            uvsVector.push_back(uv);
+        }  else if (!line.compare(0, 2, "f ")) {
+            std::vector<Vector3i> f;
+            Vector3i tmp;
             iss >> trash;
-            while (iss >> idx >> trash >> itrash >> trash >> itrash)
-            {
-                idx--; // in wavefront obj all indices start at 1, not zero
-                f.push_back(idx);
+            while (iss >> tmp[0] >> trash >> tmp[1] >> trash >> tmp[2]) {
+                for (int i=0; i<3; i++) tmp[i]--; // in wavefront obj all indices start at 1, not zero
+                f.push_back(tmp);
             }
             facesVector.push_back(f);
         }
     }
-//    std::cout<<static_cast<int>(vertsVector.size());
 }
 int Mesh::facesNum()
 {
@@ -77,4 +57,38 @@ int Mesh::facesNum()
 int Mesh::vertsNum()
 {
     return static_cast<int>(vertsVector.size());
+}
+
+int Mesh::uvsNum()
+{
+    return static_cast<int>(uvsVector.size());
+}
+
+int Mesh::normalsNum()
+{
+    return static_cast<int>(normalsVector.size());
+}
+
+Vector2f Mesh::getUV(int faceIndex,int vertexIndex)
+{
+    int index = facesVector[faceIndex][vertexIndex][1];
+    return uvsVector[index];
+}
+Vector3f Mesh::getVertex(int index)
+{
+    return vertsVector[index];
+}
+Vector3f Mesh::getNormal(int index)
+{
+    return normalsVector[index];
+}
+
+std::vector<int> Mesh::getFace(int index)
+{
+    std::vector<int> faceVec;
+    for(int i =0;i<(int)facesVector[index].size();i++)
+    {
+        faceVec.push_back(facesVector[index][i][0]);
+    }
+    return faceVec;
 }

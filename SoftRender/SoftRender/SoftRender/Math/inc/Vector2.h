@@ -9,6 +9,7 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 #include<cmath>
+#include<iostream>
 template<typename T>
 class Vector2
 {
@@ -36,6 +37,7 @@ public:
     Vector2<T>& operator*=(float s);
     Vector2<T>& operator/=(float s);
     Vector2<T> operator-()const;
+    T& operator[](const int i);
     void zero();
     void normalize();
 };
@@ -186,76 +188,30 @@ inline void Vector2<T>::normalize()
     y /=inverseTemp;
 }
 
-
+template<typename T>
+inline T& Vector2<T>::operator[](const int i)
+{
+    if(i==0)
+    {
+        return x;
+    }
+    else if(i==1)
+    {
+        return y;
+    }
+    else if(i>1)
+    {
+        std::cerr<<"Error:Index Out Of Range"<<std::endl;
+        return y;
+    }
+    else
+    {
+        std::cerr<<"Error:Index Out Of Range"<<std::endl;
+        return x;
+    }
+}
 typedef Vector2<float> Vector2f;
 typedef Vector2<int> Vector2i;
 
-//class Vector2f
-//{
-//public:
-//    float x,y;
-//    Vector2f(float inputX,float inputY):x(inputX),y(inputY)
-//    {
-//    }
-//    Vector2f():x(0.0f),y(0.0f)
-//    {
-//    }
-//    Vector2f(const Vector2f&vec):x(vec.x),y(vec.y)
-//    {
-//    }
-//    Vector2f& operator=(const Vector2f &vec);
-//    bool operator==(const Vector2f &vec);
-//    bool operator!=(const Vector2f &vec);
-//    Vector2f operator+(const Vector2f &vec)const;
-//    Vector2f operator-(const Vector2f &vec)const;
-//    //注意这里仅仅实现了标量的右乘
-//    Vector2f operator*(float s)const;
-//    Vector2f operator/(float s)const;
-//    Vector2f& operator+=(const Vector2f &vec);
-//    Vector2f& operator-=(const Vector2f &vec);
-//    Vector2f& operator*=(float s);
-//    Vector2f& operator/=(float s);
-//    Vector2f operator-()const;
-//    void zero();
-//    void normalize();
-//};
-//inline Vector2f operator*(float s, Vector2f& vec)
-//{
-//    return vec*s;
-//}
-//
-//inline Vector2f operator*(const Vector2f& vec0,const Vector2f& vec1)
-//{
-//    return Vector2f(vec0.x * vec1.x, vec0.y * vec1.y);
-//}
-//
-//inline Vector2f Inverse(const Vector2f& vec)
-//{
-//    return Vector2f(1.0f/vec.x, 1.0f/vec.y);
-//}
-//
-//inline float Dot(const Vector2f& vec0,const Vector2f& vec1)
-//{
-//    return vec0.x * vec1.x + vec0.y * vec1.y;
-//}
-//
-////求模长
-//inline float Magnitude(const Vector2f& vec)
-//{
-//    return std::sqrt(vec.x*vec.x +vec.y+vec.y);
-//}
-//inline Vector2f normalize(Vector2f& vec)
-//{
-//    float temp = vec.x*vec.x+vec.y*vec.y;
-//    float inverseTemp = 1.0f/std::sqrt(temp);
-//    return vec/inverseTemp;
-//}
-//inline float Distance(Vector2f& vec0,Vector2f& vec1)
-//{
-//    float dx = vec0.x -vec1.x;
-//    float dy = vec0.y -vec1.y;
-//    return std::sqrt(dx*dx+dy*dy);
-//}
-//
 
 #endif /* VECTOR2_H */
