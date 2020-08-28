@@ -6,8 +6,8 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#ifndef VECTOR3_H
-#define VECTOR3_H
+#ifndef GIVECTOR3_H
+#define GIVECTOR3_H
 #include <cmath>
 #include<iostream>
 template<typename T>
@@ -238,5 +238,5 @@ inline T& Vector3<T>::operator[](const int i)
         return z;
     }
 }
-#endif /* VECTOR3_H */
+#endif /* GIVECTOR3_H */
     

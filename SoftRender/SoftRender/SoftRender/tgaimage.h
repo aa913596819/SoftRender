@@ -9,7 +9,7 @@
 #define __IMAGE_H__
 
 #include <fstream>
-#include "Color.h"
+#include "GIColor.h"
 #pragma pack(push,1)
 struct TGA_Header {
     char idlength;

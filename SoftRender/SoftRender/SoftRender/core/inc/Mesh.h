@@ -8,8 +8,8 @@
 
 #ifndef MESH_H
 #define MESH_H
-#include"Vector3.h"
-#include"Vector2.h"
+#include"GIVector3.h"
+#include"GIVector2.h"
 #include<vector>
 class Mesh
 {

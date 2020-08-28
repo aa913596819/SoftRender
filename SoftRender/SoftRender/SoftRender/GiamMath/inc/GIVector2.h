@@ -6,8 +6,8 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#ifndef VECTOR2_H
-#define VECTOR2_H
+#ifndef GIVECTOR2_H
+#define GIVECTOR2_H
 #include<cmath>
 #include<iostream>
 template<typename T>
@@ -214,4 +214,4 @@ typedef Vector2<float> Vector2f;
 typedef Vector2<int> Vector2i;
 
 
-#endif /* VECTOR2_H */
+#endif /* GIVECTOR2_H */

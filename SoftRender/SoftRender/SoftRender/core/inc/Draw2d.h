@@ -8,11 +8,11 @@
 
 #ifndef DRAW2D_H
 #define DRAW2D_H
-#include"Vector2.h"
+#include"GIVector2.h"
 #include"Mesh.h"
 #include"tgaimage.h"
 #include"FrameBuffer.h"
-#include"Color.h"
+#include"GIColor.h"
 void drawPoint(int x0,int y0,FrameBuffer& targetFrame,const Color& col);
 void drawPoint(Vector2i p,FrameBuffer& targetFrame,const Color& col);
 //Bresenham

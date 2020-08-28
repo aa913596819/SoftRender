@@ -35,7 +35,6 @@ FrameBuffer::~FrameBuffer()
     return height;
 }
 
-
  int FrameBuffer::getChannels()
 {
     return channels;
@@ -43,28 +42,25 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::drawPixel(int x,int y,const Color& col)
 {
-//    if()
-//    {
-//        std::cout<<"a";
-//    }
     int index =(y*width+x)*channels;
     if(channels == 4)
     {
-        ColorBuffer[index] = col.r*255;
-        ColorBuffer[index+1] = col.g*255;
-        ColorBuffer[index+2] = col.b*255;
-        ColorBuffer[index+3] = col.a*255;
+        ColorBuffer[index] = col.r;
+        ColorBuffer[index+1] = col.g;
+        ColorBuffer[index+2] = col.b;
+        ColorBuffer[index+3] = col.a;
     }
     else
     {
-        ColorBuffer[index] = col.r*255;
-        ColorBuffer[index+1] = col.g*255;
-        ColorBuffer[index+2] = col.b*255;
+        ColorBuffer[index] = col.r;
+        ColorBuffer[index+1] = col.g;
+        ColorBuffer[index+2] = col.b;
     }
 }
 
 void FrameBuffer::draw()
 {
+    
     glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, ColorBuffer);
 }
 //
@@ -78,9 +74,9 @@ void FrameBuffer::clear(const Color &col)
         for(int j =0;j<height;j++)
         {
             int index =(j*width+i)*channels;
-            ColorBuffer[index] = col.r*255;
-            ColorBuffer[index+1] = col.g*255;
-            ColorBuffer[index+2] = col.b*255;
+            ColorBuffer[index] = col.r;
+            ColorBuffer[index+1] = col.g;
+            ColorBuffer[index+2] = col.b;
         }
     }
     for(int i = 0;i<width;i++)

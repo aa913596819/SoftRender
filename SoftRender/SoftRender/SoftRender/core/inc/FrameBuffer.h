@@ -8,10 +8,11 @@
 
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Color.h"
+#include "GIVector2.h"
+#include "GIVector3.h"
+#include "GIColor.h"
 //这里暂定用数组存储Buffer
+
 class FrameBuffer
 {
 private:

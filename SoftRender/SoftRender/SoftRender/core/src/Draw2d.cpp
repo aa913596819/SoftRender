@@ -8,7 +8,7 @@
 
 #include"Draw2d.h"
 #include<cmath>
-#include"Vector3.h"
+#include"GIVector3.h"
 #include<iostream>
 void swap(int& a, int& b)
 {
@@ -24,8 +24,6 @@ void drawPoint(Vector2i p,FrameBuffer& targetFrame,const Color& col)
 {
     targetFrame.drawPixel(p.x, p.y, col);
 }
-
-
 void drawLine(int x0,int y0,int x1,int y1,FrameBuffer& targetFrame,const Color& col)
 {
     //首先检测x、y方向哪个方向更陡峭。向更陡峭的方向步进，一个极端的例子 x方向只移动一格，

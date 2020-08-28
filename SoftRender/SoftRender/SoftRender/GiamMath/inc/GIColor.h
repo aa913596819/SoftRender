@@ -6,8 +6,8 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef GICOLOR_H
+#define GICOLOR_H
 
 class Color
 {
@@ -21,8 +21,8 @@ public:
     
     union
     {
-        struct{float r,g,b,a;};
-        struct{float x,y,z,w;};
+        struct{unsigned char r,g,b,a;};
+        struct{unsigned char x,y,z,w;};
     };
 
     
@@ -32,4 +32,4 @@ public:
     static const Color Green;
     static const Color Blue;
 };
-#endif /* Color_h */
+#endif /* GICOLOR_H */

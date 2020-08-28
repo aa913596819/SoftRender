@@ -9,8 +9,8 @@
 #include "Mesh.h"
 #include "FrameBuffer.h"
 #include "Draw2d.h"
-#include "Vector2.h"
-#include "Vector3.h"
+#include "GIVector2.h"
+#include "GIVector3.h"
 const int width  = 800;
 const int height = 800;
 //argc和argv参数在用命令行编译程序时有用。main( int argc, char* argv[], char **env ) 中
@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     Mesh* model = new Mesh("/Users/bytedance/Desktop/african_head.obj");
     TGAImage diffuseTex;
     diffuseTex.read_tga_file("/Users/bytedance/Desktop/african_head_diffuse.tga");
-    diffuseTex.flip_vertically(); // i want to have the origin at the left bottom corner of the image
+    diffuseTex.flip_vertically();
     FrameBuffer frameBuffer(width,height,3);
     GLFWwindow* win;
     if(!glfwInit()){
@@ -32,9 +32,12 @@ int main(int argc, char** argv) {
         return -1;
     }
     glfwMakeContextCurrent(win);
+    Color a = Color(1.0f,1.0f,1.0f,1.0);
+    float b = a.r;
+
     while(!glfwWindowShouldClose(win)){
-        frameBuffer.clear(Color::Black);
-        drawMesh(model, frameBuffer);
+        frameBuffer.clear(Color::Red);
+//        drawMesh(model, frameBuffer);
         frameBuffer.draw();
         glfwSwapBuffers(win);
         glfwPollEvents();
