@@ -2,8 +2,8 @@
 //  Draw2d.cpp
 //  SoftRender
 //
-//  Created by bytedance on 2020/8/11.
-//  Copyright © 2020 bytedance. All rights reserved.
+//  Created by linweifeng on 2020/8/11.
+//  Copyright © 2020 linweifeng. All rights reserved.
 //
 
 #include"Draw2d.h"
@@ -100,7 +100,7 @@ void drawMesh(Mesh* mesh,FrameBuffer& targetFrame)
         {
             texture_coords[k]=mesh->getUV(i,k);
         }
-        n.normalize();
+        n.Normalize();
         float intensity = Dot(n,light_dir);
         Color col(intensity,intensity,intensity);
         drawTriangle(&world_coords[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex);

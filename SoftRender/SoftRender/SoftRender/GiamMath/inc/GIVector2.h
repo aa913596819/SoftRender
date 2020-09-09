@@ -2,8 +2,8 @@
 //  Vector2.h
 //  SoftRender
 //
-//  Created by bytedance on 2020/8/9.
-//  Copyright © 2020 bytedance. All rights reserved.
+//  Created by linweifeng on 2020/8/9.
+//  Copyright © 2020 linweifeng. All rights reserved.
 //
 
 #ifndef GIVECTOR2_H

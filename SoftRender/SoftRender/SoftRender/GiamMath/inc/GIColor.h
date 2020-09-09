@@ -2,8 +2,8 @@
 //  Color.hpp
 //  SoftRender
 //
-//  Created by bytedance on 2020/8/13.
-//  Copyright © 2020 bytedance. All rights reserved.
+//  Created by linweifeng on 2020/8/13.
+//  Copyright © 2020 linweifeng. All rights reserved.
 //
 
 #ifndef GICOLOR_H

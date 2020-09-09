@@ -2,8 +2,8 @@
 //  Vector3.hå
 //  SoftRender
 //
-//  Created by bytedance on 2020/8/10.
-//  Copyright © 2020 bytedance. All rights reserved.
+//  Created by linweifeng on 2020/8/10.
+//  Copyright © 2020 linweifeng. All rights reserved.
 //
 
 #ifndef GIVECTOR3_H
@@ -46,8 +46,9 @@ public:
     Vector3<T>& operator/=(T s);
     Vector3<T> operator-()const;
     T& operator[](const int index);
-    void zero();
-    void normalize();
+    const T& operator[](const int index)const;
+    void Zero();
+    void Normalize();
 };
 
 template<typename T>
@@ -83,7 +84,7 @@ inline float Magnitude(const Vector3<T>& vec)
 }
 
 template<typename T>
-inline Vector3<T> normalize(Vector3<T>& vec)
+inline Vector3<T> Normalize(Vector3<T>& vec)
 {
     float temp = vec.x*vec.x+vec.y*vec.y+vec.z*vec.z;
     float inverseTemp = 1.0f/std::sqrt(temp);
@@ -199,7 +200,7 @@ inline Vector3<T> Vector3<T>::operator-()const
 }
 
 template<typename T>
-inline void Vector3<T>::zero()
+inline void Vector3<T>::Zero()
 {
     x = 0.0f;
     y = 0.0f;
@@ -207,7 +208,7 @@ inline void Vector3<T>::zero()
 }
 
 template<typename T>
-void Vector3<T>::normalize()
+void Vector3<T>::Normalize()
 {
     float temp = x * x + y * y + z * z;
     float inverseTemp = 1.0f / std::sqrt(temp);
@@ -218,6 +219,29 @@ void Vector3<T>::normalize()
 
 template<typename T>
 inline T& Vector3<T>::operator[](const int i)
+{
+
+    if(i==0)
+    {
+        return x;
+    }
+    else if(i==1)
+    {
+        return y;
+    }
+    else if(i==2)
+    {
+        return z;
+    }
+    else
+    {
+        std::cerr<<"ERROR:Index Out of Range"<<std::endl;
+        return z;
+    }
+}
+
+template<typename T>
+const inline T& Vector3<T>::operator[](const int i)const
 {
 
     if(i==0)

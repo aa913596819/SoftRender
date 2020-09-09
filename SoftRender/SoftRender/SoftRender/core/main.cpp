@@ -2,8 +2,8 @@
 //  main.cpp
 //  SoftRender
 //
-//  Created by bytedance on 2020/8/6.
-//  Copyright © 2020 bytedance. All rights reserved.
+//  Created by linweifeng on 2020/8/6.
+//  Copyright © 2020 linweifeng. All rights reserved.
 //
 #include <GLFW/glfw3.h>
 #include "Mesh.h"
@@ -33,11 +33,9 @@ int main(int argc, char** argv) {
     }
     glfwMakeContextCurrent(win);
     Color a = Color(1.0f,1.0f,1.0f,1.0);
-    float b = a.r;
-
     while(!glfwWindowShouldClose(win)){
         frameBuffer.clear(Color::Red);
-//        drawMesh(model, frameBuffer);
+        drawMesh(model, frameBuffer);
         frameBuffer.draw();
         glfwSwapBuffers(win);
         glfwPollEvents();

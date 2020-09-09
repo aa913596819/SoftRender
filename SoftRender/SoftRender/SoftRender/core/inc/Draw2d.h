@@ -2,8 +2,8 @@
 //  Draw2d.hpp
 //  SoftRender
 //
-//  Created by bytedance on 2020/8/11.
-//  Copyright © 2020 bytedance. All rights reserved.
+//  Created by linweifeng on 2020/8/11.
+//  Copyright © 2020 linweifeng. All rights reserved.
 //
 
 #ifndef DRAW2D_H

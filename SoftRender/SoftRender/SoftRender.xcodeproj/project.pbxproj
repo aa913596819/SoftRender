@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B00E93725061DAC000E2845 /* GIQuaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B00E93525061DAC000E2845 /* GIQuaternion.cpp */; };
+		2B379C6B24FCD62500A8D8A1 /* GIMatrix4x4f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B379C6924FCD62500A8D8A1 /* GIMatrix4x4f.cpp */; };
 		2B58F50A24E264E200B33D07 /* Draw2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B58F50824E264E200B33D07 /* Draw2d.cpp */; };
 		2B64D29524E53B7800790A38 /* GMColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B64D29324E53B7800790A38 /* GMColor.cpp */; };
 		2B6E2F8C24E28E67000032B8 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B6E2F8A24E28E67000032B8 /* Mesh.cpp */; };
 		2B6E2F8F24E2C5EB000032B8 /* lib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B6E2F8E24E2C5EB000032B8 /* lib */; };
 		2B8814EF24DF9835004E4B7B /* tgaimage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B8814ED24DF9835004E4B7B /* tgaimage.cpp */; };
-		2B8814F224DF9D99004E4B7B /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B8814F124DF9D99004E4B7B /* platform.cpp */; };
-		2B8A522724F82A3100E8247B /* GMType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B8A522524F82A3000E8247B /* GMType.cpp */; };
+		2B8A522F24F942C400E8247B /* GIMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B8A522D24F942C400E8247B /* GIMatrix3x3.cpp */; };
 		2BA9CB0324E4EA9B002A798F /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA9CB0224E4EA9B002A798F /* libglfw3.a */; };
 		2BA9CB0524E51298002A798F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA9CB0424E51297002A798F /* Cocoa.framework */; };
 		2BA9CB0724E512A2002A798F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA9CB0624E512A2002A798F /* IOKit.framework */; };
@@ -37,6 +38,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2B00E93525061DAC000E2845 /* GIQuaternion.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GIQuaternion.cpp; sourceTree = "<group>"; };
+		2B00E93625061DAC000E2845 /* GIQuaternion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIQuaternion.h; sourceTree = "<group>"; };
+		2B379C6924FCD62500A8D8A1 /* GIMatrix4x4f.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GIMatrix4x4f.cpp; sourceTree = "<group>"; };
+		2B379C6A24FCD62500A8D8A1 /* GIMatrix4x4f.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIMatrix4x4f.h; sourceTree = "<group>"; };
 		2B58F4E924E0047600B33D07 /* GIVector2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIVector2.h; sourceTree = "<group>"; };
 		2B58F4F124E0F31B00B33D07 /* GIVector3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIVector3.h; sourceTree = "<group>"; };
 		2B58F50824E264E200B33D07 /* Draw2d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Draw2d.cpp; sourceTree = "<group>"; };
@@ -47,11 +52,12 @@
 		2B6E2F8B24E28E67000032B8 /* Mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
 		2B6E2F8E24E2C5EB000032B8 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lib; path = ../../../../../usr/local/Cellar/glfw/3.3.2/lib; sourceTree = "<group>"; };
 		2B6E2F9024E2C60F000032B8 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lib; path = ../../../../../usr/local/Cellar/glew/2.1.0_1/lib; sourceTree = "<group>"; };
+		2B7BE17825022288002026C6 /* GIVector4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIVector4.h; sourceTree = "<group>"; };
 		2B8814ED24DF9835004E4B7B /* tgaimage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tgaimage.cpp; sourceTree = "<group>"; };
 		2B8814EE24DF9835004E4B7B /* tgaimage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tgaimage.h; sourceTree = "<group>"; };
-		2B8814F124DF9D99004E4B7B /* platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform.cpp; sourceTree = "<group>"; };
-		2B8A522524F82A3000E8247B /* GMType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GMType.cpp; sourceTree = "<group>"; };
 		2B8A522624F82A3000E8247B /* GIType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIType.h; sourceTree = "<group>"; };
+		2B8A522D24F942C400E8247B /* GIMatrix3x3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GIMatrix3x3.cpp; sourceTree = "<group>"; };
+		2B8A522E24F942C400E8247B /* GIMatrix3x3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIMatrix3x3.h; sourceTree = "<group>"; };
 		2BA9CB0024E4EA70002A798F /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../usr/local/Cellar/glew/2.1.0_1/lib/libGLEW.a; sourceTree = "<group>"; };
 		2BA9CB0224E4EA9B002A798F /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw3.a; sourceTree = "<group>"; };
 		2BA9CB0424E51297002A798F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -95,8 +101,10 @@
 		2B58F4ED24E0090A00B33D07 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2B8A522524F82A3000E8247B /* GMType.cpp */,
 				2B64D29324E53B7800790A38 /* GMColor.cpp */,
+				2B00E93525061DAC000E2845 /* GIQuaternion.cpp */,
+				2B379C6924FCD62500A8D8A1 /* GIMatrix4x4f.cpp */,
+				2B8A522D24F942C400E8247B /* GIMatrix3x3.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -108,6 +116,10 @@
 				2B58F4F124E0F31B00B33D07 /* GIVector3.h */,
 				2B64D29424E53B7800790A38 /* GIColor.h */,
 				2B8A522624F82A3000E8247B /* GIType.h */,
+				2B8A522E24F942C400E8247B /* GIMatrix3x3.h */,
+				2B379C6A24FCD62500A8D8A1 /* GIMatrix4x4f.h */,
+				2B7BE17825022288002026C6 /* GIVector4.h */,
+				2B00E93625061DAC000E2845 /* GIQuaternion.h */,
 			);
 			path = inc;
 			sourceTree = "<group>";
@@ -158,14 +170,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2B8814F024DF9D01004E4B7B /* Window */ = {
-			isa = PBXGroup;
-			children = (
-				2B8814F124DF9D99004E4B7B /* platform.cpp */,
-			);
-			path = Window;
-			sourceTree = "<group>";
-		};
 		2BFCCF3724DC3BAD00702712 = {
 			isa = PBXGroup;
 			children = (
@@ -186,7 +190,6 @@
 		2BFCCF4224DC3BAD00702712 /* SoftRender */ = {
 			isa = PBXGroup;
 			children = (
-				2B8814F024DF9D01004E4B7B /* Window */,
 				2B58F4EF24E0094700B33D07 /* core */,
 				2B58F4EC24E0090200B33D07 /* GiamMath */,
 				2B8814ED24DF9835004E4B7B /* tgaimage.cpp */,
@@ -253,13 +256,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B8814EF24DF9835004E4B7B /* tgaimage.cpp in Sources */,
-				2B8814F224DF9D99004E4B7B /* platform.cpp in Sources */,
 				2BFCCF4424DC3BAD00702712 /* main.cpp in Sources */,
 				2BA9CB0C24E5291F002A798F /* FrameBuffer.cpp in Sources */,
 				2B6E2F8C24E28E67000032B8 /* Mesh.cpp in Sources */,
-				2B8A522724F82A3100E8247B /* GMType.cpp in Sources */,
 				2B64D29524E53B7800790A38 /* GMColor.cpp in Sources */,
+				2B379C6B24FCD62500A8D8A1 /* GIMatrix4x4f.cpp in Sources */,
+				2B8A522F24F942C400E8247B /* GIMatrix3x3.cpp in Sources */,
 				2B58F50A24E264E200B33D07 /* Draw2d.cpp in Sources */,
+				2B00E93725061DAC000E2845 /* GIQuaternion.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
