@@ -12,7 +12,7 @@
 #include "GIVector3.h"
 #include "GIColor.h"
 //这里暂定用数组存储Buffer
-
+using namespace GiamEngine;
 class FrameBuffer
 {
 private:

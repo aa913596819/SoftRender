@@ -6,11 +6,17 @@
 //  Copyright © 2020 linweifeng. All rights reserved.
 //
 
-#ifndef GIMATRIX4x4f_H
-#define GIMATRIX4x4f_H
+#ifndef GIMATRIX4x4F_H
+#define GIMATRIX4x4F_H
+#include "GIVector3.h"
 #include "GIVector4.h"
+#include"GIMatrix3x3f.h"
+
+
+///
 namespace GiamEngine
 {
+
 class Matrix4x4f
 {
 public:
@@ -27,8 +33,18 @@ public:
     Vector4f GetColumn(int colum);
     void SetIdentity();
     void SetZero();
-    void Scale(const Vector4f& scaleVec);
+    Matrix4x4f operator*(const Matrix4x4f& mat4);
+    Matrix4x4f& operator*=(const Matrix4x4f& mat4);
+    Vector4f operator*(const Vector4f vec4);
+    //
+    void SetScale(const Vector3f& scaleVec);
+    static Matrix4x4f Rotate(float radians,const Vector3f& axis);
+    static Matrix4x4f Scale(const Vector3f& scalar);
+    static Matrix4x4f Translate(const Vector3f& scalar);
+    static Matrix4x4f Perspective(float fov,float aspect,float nearClip,float farClip);
 };
+Vector4f mul(const Matrix4x4f& mat4, const Vector4f& vec4);
+
 }
 
 

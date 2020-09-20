@@ -11,12 +11,18 @@
 
 #include <cmath>
 #include<iostream>
+#include"GIVector3.h"
+namespace GiamEngine
+{
 template<typename T>
 class Vector4
 {
 public:
     T x,y,z,w;
     Vector4()
+    {
+    }
+    Vector4(Vector3<T> vec3):x(vec3.x),y(vec3.y),z(vec3.z),w(1)
     {
     }
     Vector4(T inX, T inY, T inZ, T inW):x(inX),y(inY),z(inZ),w(inW)
@@ -42,7 +48,16 @@ public:
     const T& operator[](const int index)const;
     void Zero();
     void Normalize();
+    void PresDivision();
 };
+template<typename T>
+void Vector4<T>::PresDivision()
+{
+    x /=w;
+    y /=w;
+    z /=w;
+}
+
 
 template<typename T>
 inline Vector4<T> operator*(T s, Vector4<T>& vec)
@@ -76,9 +91,15 @@ inline float Magnitude(const Vector4<T>& vec)
     return std::sqrt(vec.x*vec.x +vec.y+vec.y+ vec.z*vec.z + vec.w*vec.w);
 }
 
+
+
+
 template<typename T>
 inline Vector4<T> Normalize(Vector4<T>& vec)
 {
+    using namespace std;
+    float maxComp = max(max(max(vec.x,vec.y),vec.z),vec.w);
+    vec *=(1.0/maxComp);
     float temp = vec.x*vec.x+vec.y*vec.y+vec.z*vec.z+vec.w*vec.w;
     float inverseTemp = 1.0f/std::sqrt(temp);
     return vec/inverseTemp;
@@ -193,13 +214,7 @@ inline void Vector4<T>::Zero()
 template<typename T>
 void Vector4<T>::Normalize()
 {
-    float temp = x * x + y * y + z * z + w * w;
-    float inverseTemp = 1.0f / std::sqrt(temp);
-    x *=inverseTemp;
-    y *=inverseTemp;
-    z *=inverseTemp;
-    w *=inverseTemp;
-
+    Normalize(this);
 }
 
 template<typename T>
@@ -264,6 +279,6 @@ const inline T& Vector4<T>::operator[](const int i)const
         return w;
     }
 }
-
+}
 
 #endif /* GIVECTOR4_H */

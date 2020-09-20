@@ -40,6 +40,8 @@ public:
 
     float* GetPtr();
     const float* GetPtr()const;
+    static const  Quaternion Zero;
+    static const Quaternion Indentity;
 };
 
 Quaternion operator+(const Quaternion& q0, const Quaternion&q1);

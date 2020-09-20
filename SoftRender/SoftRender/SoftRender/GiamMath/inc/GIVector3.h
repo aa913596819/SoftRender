@@ -10,6 +10,8 @@
 #define GIVECTOR3_H
 #include <cmath>
 #include<iostream>
+namespace GiamEngine
+{
 template<typename T>
 class Vector3
 {
@@ -84,12 +86,20 @@ inline float Magnitude(const Vector3<T>& vec)
 }
 
 template<typename T>
-inline Vector3<T> Normalize(Vector3<T>& vec)
+inline Vector3<T> Normalize(const Vector3<T>& vec)
 {
-    float temp = vec.x*vec.x+vec.y*vec.y+vec.z*vec.z;
+    using namespace std;
+    
+    Vector3<T> tempVec;
+    tempVec = vec;
+    float maxComp = max(max(vec.x,vec.y),vec.z);
+    tempVec *=(1.0/maxComp);
+    float temp = tempVec.x*tempVec.x+tempVec.y*tempVec.y+tempVec.z*tempVec.z;
     float inverseTemp = 1.0f/std::sqrt(temp);
-    return vec/inverseTemp;
+    return tempVec/inverseTemp;
 }
+
+
 //叉乘
 
 template<typename T>
@@ -210,11 +220,7 @@ inline void Vector3<T>::Zero()
 template<typename T>
 void Vector3<T>::Normalize()
 {
-    float temp = x * x + y * y + z * z;
-    float inverseTemp = 1.0f / std::sqrt(temp);
-    x *=inverseTemp;
-    y *=inverseTemp;
-    z *=inverseTemp;
+    GiamEngine::Normalize(*this);
 }
 
 template<typename T>
@@ -261,6 +267,7 @@ const inline T& Vector3<T>::operator[](const int i)const
         std::cerr<<"ERROR:Index Out of Range"<<std::endl;
         return z;
     }
+}
 }
 #endif /* GIVECTOR3_H */
     

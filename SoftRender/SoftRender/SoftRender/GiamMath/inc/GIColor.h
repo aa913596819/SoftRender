@@ -8,7 +8,8 @@
 
 #ifndef GICOLOR_H
 #define GICOLOR_H
-
+namespace GiamEngine
+{
 class Color
 {
 public:
@@ -32,4 +33,5 @@ public:
     static const Color Green;
     static const Color Blue;
 };
+}
 #endif /* GICOLOR_H */

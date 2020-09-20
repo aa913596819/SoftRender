@@ -9,6 +9,7 @@
 #include"Draw2d.h"
 #include<cmath>
 #include"GIVector3.h"
+#include"GIMatrix4x4f.h"
 #include<iostream>
 void swap(int& a, int& b)
 {
@@ -16,6 +17,8 @@ void swap(int& a, int& b)
     a = b;
     b = temp;
 }
+
+
 void drawPoint(int x0,int y0,FrameBuffer& targetFrame,const Color& col)
 {
     targetFrame.drawPixel(x0, y0, col);
@@ -77,33 +80,40 @@ void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col)
 }
 void drawMesh(Mesh* mesh,FrameBuffer& targetFrame)
 {
+    Matrix4x4f modelMat4;
+    modelMat4 = Matrix4x4f::Rotate(180.0f, Vector3f(0.0f,1.0f,0.0f));
+    
+    Matrix4x4f viewMat4;
+    viewMat4 = Matrix4x4f::Translate(Vector3f(0.0,0.0,-2.0f));
+    
+    Matrix4x4f projectMat4;
+    projectMat4 = Matrix4x4f::Perspective(60, 4.0/3.0, 1.0,40.0);
+    
+    Matrix4x4f mvp = modelMat4*viewMat4*projectMat4;
+    
     Vector3f light_dir(0,0,-1);
     TGAImage diffuseTex;
     diffuseTex.read_tga_file("/Users/bytedance/Desktop/african_head_diffuse.tga");
     diffuseTex.flip_vertically();
     
+
     for (int i=0; i<mesh->facesNum(); i++)
     {
         std::vector<int> face = mesh->getFace(i);
         Vector2f texture_coords[3];
-        Vector3f world_coords[3];
+        Vector4f pos[3];
         Vector3f normals[3];
         for (int j=0; j<3; j++) {
-            world_coords[j]  = mesh->getVertex(face[j]);
+            pos[j]  = mul(mvp, mesh->getVertex(face[j]));
+            pos[j].PresDivision();
             normals[j] =mesh->getNormal(face[j]);
+            texture_coords[j]=mesh->getUV(i,j);
+            texture_coords[j] /=pos[j].w;
+            pos[j].w = 1.0f/pos[j].w;
+
         }
-        Vector3f vec0 =world_coords[2]-world_coords[0];
-        Vector3f vec1 =world_coords[1]-world_coords[0];
-        Vector3f n = Cross(vec0, vec1);
         
-        for(int k=0; k<3; k++)
-        {
-            texture_coords[k]=mesh->getUV(i,k);
-        }
-        n.Normalize();
-        float intensity = Dot(n,light_dir);
-        Color col(intensity,intensity,intensity);
-        drawTriangle(&world_coords[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex);
+        drawTriangle(&pos[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex);
     }
 }
 
@@ -125,7 +135,7 @@ Vector3f barycentric(Vector2<T0>p0,Vector2<T0>p1,Vector2<T0>p2,Vector3<T1>p)
     return Vector3f(1.0f-(bary.x+bary.y)/bary.z, bary.y/bary.z, bary.x/bary.z);
 }
 
-void drawTriangle(Vector3f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse)
+void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse)
 {
     Vector2i bboxMin(0,0);
     Vector2i bboxMax(0,0);
@@ -156,6 +166,11 @@ void drawTriangle(Vector3f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& t
                                            (uvs[0].x *bary.x + uvs[1].x *bary.y + uvs[2].x *bary.z)*(diffuse.get_width()),
                                            (uvs[0].y *bary.x + uvs[1].y *bary.y + uvs[2].y *bary.z)*(diffuse.get_height())
                                            );
+                    
+                    float uOver1 = verts[0].w *bary.x + verts[1].w *bary.y + verts[2].w *bary.z;
+                    float u = 1.0f/uOver1;
+                    uv *=u;
+                    
                     targetFrame.Zbuffer[zIndex]=z;
                     targetFrame.drawPixel(p.x,p.y,diffuse.getColor(uv.x, uv.y));
                 }

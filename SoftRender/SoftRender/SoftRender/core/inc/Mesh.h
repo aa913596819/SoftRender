@@ -11,6 +11,7 @@
 #include"GIVector3.h"
 #include"GIVector2.h"
 #include<vector>
+using namespace GiamEngine;
 class Mesh
 {
 private:

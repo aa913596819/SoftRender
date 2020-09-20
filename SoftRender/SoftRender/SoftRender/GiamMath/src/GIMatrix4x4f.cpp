@@ -6,9 +6,36 @@
 //  Copyright © 2020 linweifeng. All rights reserved.
 //
 
+#include "GIMatrix3x3f.h"
 #include "GIMatrix4x4f.h"
-#include "GIMatrix3x3.h"
+#include "GIFloatConversion.h"
+#include <cmath>
 using namespace GiamEngine;
+
+
+Vector4f GiamEngine::mul(const Matrix4x4f& mat4, const Vector4f& vec4)
+{
+    float x = mat4.m_Data[0] * vec4.x + mat4.m_Data[1] * vec4.y + mat4.m_Data[2] * vec4.z + mat4.m_Data[3] * vec4.w;
+    float y = mat4.m_Data[4] * vec4.x + mat4.m_Data[5] * vec4.y + mat4.m_Data[6] * vec4.z + mat4.m_Data[7] * vec4.w;
+    float z = mat4.m_Data[8] * vec4.x + mat4.m_Data[9] * vec4.y + mat4.m_Data[10] * vec4.z + mat4.m_Data[11] * vec4.w;
+    float w = mat4.m_Data[12] * vec4.x + mat4.m_Data[13] * vec4.y + mat4.m_Data[14] * vec4.z + mat4.m_Data[15] * vec4.w;
+    return Vector4f(x,y,z,w);
+}
+
+
+void MultiplyMatrix4x4f(const Matrix4x4f& lhs,const Matrix4x4f& rhs,Matrix4x4f& res)
+{
+    for(int i = 0; i < 4; i++)
+    {
+        res[i] = lhs[i] * rhs[0] + lhs[i+4] * rhs[1] + lhs[i+8] * rhs[2] + lhs[i+12] * rhs[3];
+        res[i+4] = lhs[i] * rhs[4] + lhs[i+4] * rhs[5] + lhs[i+8] * rhs[6] + lhs[i+12] * rhs[7];
+        res[i+8] = lhs[i] * rhs[8] + lhs[i+4] * rhs[9] + lhs[i+8] * rhs[10] + lhs[i+12] * rhs[11];
+        res[i+12] = lhs[i] * rhs[12] + lhs[i+4] * rhs[13] + lhs[i+8] * rhs[14] + lhs[i+12] * rhs[15];
+    }
+}
+
+
+
 Matrix4x4f::Matrix4x4f(float data[16])
 {
     for(int i = 0; i < 16; i++)
@@ -71,7 +98,7 @@ float& Matrix4x4f::Get(int row, int colum)
 
 const float& Matrix4x4f::Get(int row, int colum)const
 {
-    return m_Data[row + colum*4];
+    return m_Data[row*4 + colum];
 }
 
 float& Matrix4x4f::operator[](int index)
@@ -86,7 +113,7 @@ float Matrix4x4f::operator[](int index)const
 
 Vector4f Matrix4x4f::GetColumn(int colum)
 {
-    return Vector4f(m_Data[0+colum*4],m_Data[1+colum*4],m_Data[2+colum*4],m_Data[3+colum*4]);
+    return Vector4f(m_Data[colum],m_Data[colum+4],m_Data[colum +8],m_Data[colum+12]);
 }   
 
 void Matrix4x4f::SetZero()
@@ -120,7 +147,7 @@ void Matrix4x4f::SetIdentity()
     m_Data[15] = 1.0f;
 }
 
-void Matrix4x4f::Scale(const Vector4f &scaleVec)
+void Matrix4x4f::SetScale(const Vector3f &scaleVec)
 {
     m_Data[0] *=scaleVec[0];
     m_Data[4] *=scaleVec[0];
@@ -137,9 +164,98 @@ void Matrix4x4f::Scale(const Vector4f &scaleVec)
     m_Data[10] *=scaleVec[2];
     m_Data[14] *=scaleVec[2];
     
-    m_Data[3] *=scaleVec[3];
-    m_Data[7] *=scaleVec[3];
-    m_Data[11] *=scaleVec[3];
-    m_Data[15] *=scaleVec[3];
 
 }
+
+Matrix4x4f Matrix4x4f::Scale(const Vector3f& scalar)
+{
+    Matrix4x4f mat4;
+    mat4.SetIdentity();
+    mat4.SetScale(scalar);
+    return mat4;
+}
+
+Matrix4x4f Matrix4x4f::Translate(const Vector3f& scalar)
+{
+    Matrix4x4f mat4;
+    mat4.SetIdentity();
+    mat4.Get(0, 3) = scalar.x;
+    mat4.Get(1, 3) = scalar.y;
+    mat4.Get(2, 3) = scalar.z;
+    return mat4;
+}
+
+Matrix4x4f Matrix4x4f::Rotate(float radians,const Vector3f& axis)
+{
+    Matrix4x4f mat4;
+    Vector3f normalizeAxis = GiamEngine::Normalize(axis);
+    mat4.SetIdentity();
+    float rad = Deg2Rad(radians);
+    float c = cos(rad);
+    float s = sin(rad);
+    mat4.Get(0, 0) = normalizeAxis.x*normalizeAxis.x +(1.0-normalizeAxis.x*normalizeAxis.x)*c;
+    mat4.Get(0, 1) = normalizeAxis.x*normalizeAxis.y*(1.0f-c) - normalizeAxis.z *s;
+    mat4.Get(0, 2) = normalizeAxis.x*normalizeAxis.z*(1.0f-c) + normalizeAxis.y *s;
+    mat4.Get(0, 3) = 0.0F;
+
+    mat4.Get(1, 0) = normalizeAxis.x*normalizeAxis.y*(1.0f-c)+normalizeAxis.z*s;
+    mat4.Get(1, 1) = normalizeAxis.y*normalizeAxis.y+(1.0f-normalizeAxis.y*normalizeAxis.y)*c;
+    mat4.Get(1, 2) = normalizeAxis.y*normalizeAxis.z*(1.0f -c)-normalizeAxis.x*s;
+    mat4.Get(1, 3) =0.0f;
+
+    mat4.Get(2, 0) = normalizeAxis.x*normalizeAxis.z*(1.0f-c)+normalizeAxis.z*s;
+    mat4.Get(2, 1) = normalizeAxis.y*normalizeAxis.z*(1.0f-c) + normalizeAxis.x*s;
+    mat4.Get(2, 2) = normalizeAxis.z*normalizeAxis.z+(1.0 -normalizeAxis.z*normalizeAxis.z)*c;
+    mat4.Get(2, 3) = 0.0f;
+
+    mat4.Get(3, 0) = 0.0f;
+    mat4.Get(3, 1) = 0.0f;
+    mat4.Get(3, 2) = 0.0f;
+    mat4.Get(3, 3) = 1.0f;
+
+    
+    return mat4;
+}
+
+Matrix4x4f Matrix4x4f::Perspective(float fov,float aspect,float nearClip,float farClip)
+{
+    Matrix4x4f mat4;
+    mat4.SetIdentity();
+    float halfFov_rad = Deg2Rad(fov/2.0f);
+    float cot = cos(halfFov_rad)/sin(halfFov_rad);
+    
+    mat4.Get(0, 0) = cot/aspect;
+    mat4.Get(0, 1) = 0.0F;
+    mat4.Get(0, 2) = 0.0F;
+    mat4.Get(0, 3) = 0.0F;
+    mat4.Get(1, 0) = 0.0F;
+    mat4.Get(1, 1) = cot;
+    mat4.Get(1, 2) = 0.0F;
+    mat4.Get(1, 3) = 0.0F;
+    mat4.Get(2, 0) = 0.0F;
+    mat4.Get(2, 1) = 0.0F;
+    mat4.Get(2, 2) = -(farClip+nearClip)/(farClip-nearClip);
+    mat4.Get(2, 3) = -(2.0f*nearClip*farClip)/(farClip-nearClip);
+    mat4.Get(3, 0) = 0.0F;
+    mat4.Get(3, 1) = 0.0F;
+    mat4.Get(3, 2) = -1.0f;
+    mat4.Get(3, 3) = 0.0f;
+
+    return mat4;
+}
+
+Matrix4x4f Matrix4x4f::operator*(const Matrix4x4f &mat4)
+{
+    Matrix4x4f temp;
+    MultiplyMatrix4x4f(*this, mat4, temp);
+    return temp;
+}
+Matrix4x4f& Matrix4x4f::operator*=(const Matrix4x4f &mat4)
+{
+    Matrix4x4f temp;
+    MultiplyMatrix4x4f(*this, mat4, temp);
+    *this =temp;
+    return *this;
+}
+
+

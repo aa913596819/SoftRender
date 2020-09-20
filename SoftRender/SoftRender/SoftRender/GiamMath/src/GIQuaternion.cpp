@@ -112,3 +112,6 @@ Quaternion& Quaternion::operator/=(const float scalar)
     w /=scalar;
     return *this;
 }
+
+const Quaternion Quaternion::Zero(0.0f,0.0f,0.0f,0.0f);
+const Quaternion Quaternion::Indentity(0.0f,0.0f,0.0f,1.0f);

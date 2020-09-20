@@ -6,7 +6,7 @@
 //  Copyright © 2020 linweifeng. All rights reserved.
 //
 
-#include "GIMatrix3x3.h"
+#include "GIMatrix3x3f.h"
 #include "GIMatrix4x4f.h"
 using namespace GiamEngine;
 float& Matrix3x3f::Get(int row, int colum)
@@ -137,3 +137,11 @@ bool Matrix3x3f::Invert()
     
     return true;
 }
+
+//Vector3f mul(const Matrix3x3f& mat3, const Vector3f& vec3)
+//{
+//    float x = mat3.m_Data[0] * vec3.x + mat3.m_Data[1] * vec3.y + mat3.m_Data[2] * vec3.z;
+//    float y = mat3.m_Data[3] * vec3.x + mat3.m_Data[4] * vec3.y + mat3.m_Data[5] * vec3.z;
+//    float z = mat3.m_Data[6] * vec3.x + mat3.m_Data[7] * vec3.y + mat3.m_Data[8] * vec3.z;
+//    return Vector3f(x,y,z);
+//}

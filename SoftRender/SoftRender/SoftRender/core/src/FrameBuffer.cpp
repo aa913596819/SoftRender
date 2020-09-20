@@ -9,6 +9,7 @@
 #include "FrameBuffer.h"
 #include <GLFW/glfw3.h>
 #include<iostream>
+using namespace GiamEngine;
 FrameBuffer:: FrameBuffer(const  int& w,const  int& h,const  int& c):width(w),height(h),channels(c)
 {
     ColorBuffer = new unsigned char[width*height*channels];

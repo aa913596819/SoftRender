@@ -90,7 +90,7 @@ public:
     bool flip_vertically();
     bool scale(int w, int h);
     TGAColor get(int x, int y);
-    Color getColor(int x, int y);
+    GiamEngine::Color getColor(int x, int y);
     bool set(int x, int y, TGAColor c);
     ~TGAImage();
     TGAImage & operator =(const TGAImage &img);

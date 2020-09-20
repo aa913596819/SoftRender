@@ -10,6 +10,8 @@
 #define GIVECTOR2_H
 #include<cmath>
 #include<iostream>
+namespace GiamEngine
+{
 template<typename T>
 class Vector2
 {
@@ -94,7 +96,7 @@ inline void Vector2<T>::zero()
 
 
 template<typename T>
-Vector2<T> Vector2<T>::operator*(float s)const
+inline Vector2<T> Vector2<T>::operator*(float s)const
 {
     return Vector2<T>(x*s,y*s);
 }
@@ -102,32 +104,32 @@ Vector2<T> Vector2<T>::operator*(float s)const
 
 
 template<typename T>
-Vector2<T>& Vector2<T>::operator=(const Vector2<T> &vec)
+inline Vector2<T>& Vector2<T>::operator=(const Vector2<T> &vec)
 {
     x = vec.x;
     y = vec.y;
     return *this;
 }
 template<typename T>
-bool Vector2<T>::operator==(const Vector2<T> &vec)
+inline bool Vector2<T>::operator==(const Vector2<T> &vec)
 {
     return x == vec.x&& y == vec.y;
 }
 
 template<typename T>
-bool Vector2<T>::operator!=(const Vector2<T> &vec)
+inline bool Vector2<T>::operator!=(const Vector2<T> &vec)
 {
     return x != vec.x|| y != vec.y;
 }
 
 template<typename T>
-Vector2<T> Vector2<T>::operator+(const Vector2<T> &vec)const
+inline Vector2<T> Vector2<T>::operator+(const Vector2<T> &vec)const
 {
     return Vector2<T>(x+vec.x, y+vec.y);
 }
 
 template<typename T>
-Vector2<T> Vector2<T>::operator-(const Vector2<T> &vec)const
+inline Vector2<T> Vector2<T>::operator-(const Vector2<T> &vec)const
 {
     return Vector2<T>(x-vec.x, y-vec.y);
 }
@@ -140,14 +142,14 @@ Vector2<T> Vector2<T>::operator-(const Vector2<T> &vec)const
 //}
 
 template<typename T>
-Vector2<float> Vector2<T>::operator/(float s)const
+inline Vector2<float> Vector2<T>::operator/(float s)const
 {
     float temp = 1.0f/s;
     return this->operator*(temp);
 }
 
 template<typename T>
-Vector2<T>& Vector2<T>::operator+=(const Vector2<T>& vec)
+inline Vector2<T>& Vector2<T>::operator+=(const Vector2<T>& vec)
 {
     x += vec.x;
     y += vec.y;
@@ -155,7 +157,7 @@ Vector2<T>& Vector2<T>::operator+=(const Vector2<T>& vec)
 }
 
 template<typename T>
-Vector2<T>& Vector2<T>::operator*=(float s)
+inline Vector2<T>& Vector2<T>::operator*=(float s)
 {
     x *= s;
     y *= s;
@@ -163,7 +165,7 @@ Vector2<T>& Vector2<T>::operator*=(float s)
 }
 
 template<typename T>
-Vector2<T>& Vector2<T>::operator/=(float s)
+inline Vector2<T>& Vector2<T>::operator/=(float s)
 {
     float temp = 1.0f/s;
     x *= temp;
@@ -213,5 +215,5 @@ inline T& Vector2<T>::operator[](const int i)
 typedef Vector2<float> Vector2f;
 typedef Vector2<int> Vector2i;
 
-
+}
 #endif /* GIVECTOR2_H */

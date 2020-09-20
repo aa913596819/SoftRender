@@ -11,7 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include<string>
-
+using namespace GiamEngine;
 //读取obj文件
 Mesh::Mesh(const char* fileName)
 {

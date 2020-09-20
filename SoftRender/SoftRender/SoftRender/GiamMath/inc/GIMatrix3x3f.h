@@ -1,13 +1,13 @@
 //
-//  GIMatrix3x3.hpp
+//  GIMatrix3x3f.h
 //  SoftRender
 //
 //  Created by linweifeng on 2020/8/28.
 //  Copyright © 2020 linweifeng. All rights reserved.
 //
 
-#ifndef GIMATRIX3X3_H
-#define GIMATRIX3X3_H
+#ifndef GIMATRIX3X3F_H
+#define GIMATRIX3X3F_H
 //#include"GIMatrix4x4f.h"
 #include"GIVector3.h"
 namespace GiamEngine
@@ -47,7 +47,10 @@ public:
     
     static const Matrix3x3f& zero();
     static const Matrix3x3f& identity();
+    static const Matrix3x3f Zero;
 };
+
+//Vector3f mul(const Matrix3x3f& mat3, const Vector3f& vec3);
 
 Matrix3x3f ElurToMatrix();
 Vector3f MatrixToEuler();

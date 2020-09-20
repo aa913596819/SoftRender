@@ -265,13 +265,13 @@ TGAColor TGAImage::get(int x, int y) {
 
 
 
-Color TGAImage::getColor(int x, int y) {
+GiamEngine::Color TGAImage::getColor(int x, int y) {
     if (!data || x<0 || y<0 || x>=width || y>=height) {
-        return Color();
+        return GiamEngine::Color();
     }
     TGAColor col(data+(x+y*width)*bytespp, bytespp);
      
-    return Color(col.r,col.g,col.b,col.a);
+    return GiamEngine::Color(col.r,col.g,col.b,col.a);
 }
 bool TGAImage::set(int x, int y, TGAColor c) {
     if (!data || x<0 || y<0 || x>=width || y>=height) {

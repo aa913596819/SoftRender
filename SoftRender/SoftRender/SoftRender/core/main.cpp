@@ -11,6 +11,7 @@
 #include "Draw2d.h"
 #include "GIVector2.h"
 #include "GIVector3.h"
+
 const int width  = 800;
 const int height = 800;
 //argc和argv参数在用命令行编译程序时有用。main( int argc, char* argv[], char **env ) 中
@@ -32,9 +33,8 @@ int main(int argc, char** argv) {
         return -1;
     }
     glfwMakeContextCurrent(win);
-    Color a = Color(1.0f,1.0f,1.0f,1.0);
     while(!glfwWindowShouldClose(win)){
-        frameBuffer.clear(Color::Red);
+        frameBuffer.clear(Color::Black);
         drawMesh(model, frameBuffer);
         frameBuffer.draw();
         glfwSwapBuffers(win);
