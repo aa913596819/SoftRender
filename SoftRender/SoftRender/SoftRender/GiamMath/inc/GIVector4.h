@@ -100,8 +100,8 @@ template<typename T>
 inline Vector4<T> Normalize(Vector4<T>& vec)
 {
     using namespace std;
-    float maxComp = max(max(max(vec.x,vec.y),vec.z),vec.w);
-    vec *=(1.0/maxComp);
+//    float maxComp = max(max(max(vec.x,vec.y),vec.z),vec.w);
+//    vec *=(1.0/maxComp);
     float temp = vec.x*vec.x+vec.y*vec.y+vec.z*vec.z+vec.w*vec.w;
     float inverseTemp = 1.0f/std::sqrt(temp);
     return vec/inverseTemp;

@@ -24,7 +24,7 @@ float lastFrame = 0.0f;
 float lastX = 0.0f;
 float lastY = 0.0f;
 float firstMouse =true;
-Camera cam(Vector3f(0.0,0.0,-5.0f),Vector3f(0.0,1.0,0.0),0.0,0.0);
+Camera cam(Vector3f(0.0,0.0,-3.0f),Vector3f(0.0,1.0,0.0),0.0,0.0);
 //argc和argv参数在用命令行编译程序时有用。main( int argc, char* argv[], char **env ) 中
 //第一个参数，int型的argc，为整型，用来统计程序运行时发送给main函数的命令行参数的个数，在VS中默认值为1。
 int main(int argc, char** argv) {
@@ -85,8 +85,8 @@ void mouse_callback(GLFWwindow* window,double xpos, double ypos)
         firstMouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float xoffset = (xpos - lastX)*0.5;
+    float yoffset =(lastY - ypos)*0.5; // reversed since y-coordinates go from bottom to top
 
     lastX = xpos;
     lastY = ypos;

@@ -245,22 +245,15 @@ Matrix4x4f Matrix4x4f::Perspective(float fov,float aspect,float nearClip,float f
     Matrix4x4f mat4;
     mat4.SetIdentity();
     float halfFov_rad = Deg2Rad(fov/2.0f);
-    float cot = cos(halfFov_rad)/sin(halfFov_rad);
-    
+//    float cot = cos(halfFov_rad)/sin(halfFov_rad);
+    float cot =  1 / (float)tan(halfFov_rad);
     mat4.Get(0, 0) = cot/aspect;
-    mat4.Get(0, 1) = 0.0F;
-    mat4.Get(0, 2) = 0.0F;
-    mat4.Get(0, 3) = 0.0F;
-    mat4.Get(1, 0) = 0.0F;
+
     mat4.Get(1, 1) = cot;
-    mat4.Get(1, 2) = 0.0F;
-    mat4.Get(1, 3) = 0.0F;
-    mat4.Get(2, 0) = 0.0F;
-    mat4.Get(2, 1) = 0.0F;
+
     mat4.Get(2, 2) = -(farClip+nearClip)/(farClip-nearClip);
     mat4.Get(2, 3) = -(2.0f*nearClip*farClip)/(farClip-nearClip);
-    mat4.Get(3, 0) = 0.0F;
-    mat4.Get(3, 1) = 0.0F;
+
     mat4.Get(3, 2) = -1.0f;
     mat4.Get(3, 3) = 0.0f;
 

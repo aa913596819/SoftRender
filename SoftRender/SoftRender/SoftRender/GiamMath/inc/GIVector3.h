@@ -92,11 +92,11 @@ inline Vector3<T> Normalize(const Vector3<T>& vec)
     
     Vector3<T> tempVec;
     tempVec = vec;
-    float maxComp = max(max(vec.x,vec.y),vec.z);
-    tempVec *=(1.0/maxComp);
+//    float maxComp = max(max(vec.x,vec.y),vec.z);
+//    tempVec *=(1.0/maxComp);
     float temp = tempVec.x*tempVec.x+tempVec.y*tempVec.y+tempVec.z*tempVec.z;
     float inverseTemp = 1.0f/std::sqrt(temp);
-    return tempVec/inverseTemp;
+    return tempVec*inverseTemp;
 }
 
 
@@ -230,7 +230,7 @@ inline void Vector3<T>::Zero()
 template<typename T>
 void Vector3<T>::Normalize()
 {
-    GiamEngine::Normalize(*this);
+    *this = GiamEngine::Normalize(*this);
 }
 
 template<typename T>

@@ -14,9 +14,11 @@ FrameBuffer:: FrameBuffer(const  int& w,const  int& h,const  int& c):width(w),he
 {
     ColorBuffer = new unsigned char[width*height*channels];
     Zbuffer = new float[width*height];
+    std::cout<<"linweifeng:"<<std::numeric_limits<int>::max()<<std::endl;
     for(int i =0 ;i<width*height;i++)
     {
-        Zbuffer[i]= -std::numeric_limits<int>::max();
+        Zbuffer[i]= std::numeric_limits<int>::max();
+        
     }
 }
 
@@ -85,7 +87,7 @@ void FrameBuffer::clear(const Color &col)
         for(int j =0;j<height;j++)
         {
             int index =(j*width+i);
-            Zbuffer[index] =- std::numeric_limits<int>::max();
+            Zbuffer[index] =std::numeric_limits<int>::max();
         }
     }
 }
