@@ -1,5 +1,5 @@
 //
-//  Vector2.h
+//  GIVector2.h
 //  SoftRender
 //
 //  Created by linweifeng on 2020/8/9.

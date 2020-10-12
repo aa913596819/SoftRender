@@ -1,5 +1,5 @@
 //
-//  GiMathType.hpp
+//  GIType.h
 //  SoftRender
 //
 //  Created by linweifeng on 2020/8/28.
@@ -17,5 +17,9 @@
 #define GI_RGB              0x0004
 #define GI_RGBA             0x0005
 
-typedef  unsigned int  GIenum;
+/* Rasterization Format */
+#define GI_SCAN             0x1000
+#define GI_BARYCENTER       0x1001
+
+typedef  unsigned int  GIEnum;
 #endif /* GITYPE_H */

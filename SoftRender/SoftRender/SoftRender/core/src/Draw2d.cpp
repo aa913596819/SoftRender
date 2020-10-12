@@ -11,6 +11,13 @@
 #include"GIVector3.h"
 #include"GIMatrix4x4f.h"
 #include<iostream>
+#include"Camera.h"
+
+template<typename T>
+T lerp(T a, T b, float factor)
+{
+    return a * (1.0-factor) + b * factor;
+}
 void swap(int& a, int& b)
 {
     int temp = a;
@@ -78,13 +85,12 @@ void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col)
 {
     drawLine(p0.x, p0.y, p1.x, p1.y,targetFrame,col);
 }
-void drawMesh(Mesh* mesh,FrameBuffer& targetFrame)
+void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
 {
     Matrix4x4f modelMat4;
     modelMat4 = Matrix4x4f::Rotate(180.0f, Vector3f(0.0f,1.0f,0.0f));
     
-    Matrix4x4f viewMat4;
-    viewMat4 = Matrix4x4f::Translate(Vector3f(0.0,0.0,-2.0f));
+    Matrix4x4f viewMat4 = cam.GetViewMatrix();
     
     Matrix4x4f projectMat4;
     projectMat4 = Matrix4x4f::Perspective(60, 4.0/3.0, 1.0,40.0);
@@ -103,17 +109,30 @@ void drawMesh(Mesh* mesh,FrameBuffer& targetFrame)
         Vector2f texture_coords[3];
         Vector4f pos[3];
         Vector3f normals[3];
+        Vector3f world_coords[3];
+
         for (int j=0; j<3; j++) {
             pos[j]  = mul(mvp, mesh->getVertex(face[j]));
+            Vector4f a  = mul(modelMat4, mesh->getVertex(face[j]));
+//            world_coords[j] = Vector3f(a.x,a.y,a.z);
+            world_coords[j] =mesh->getVertex(face[j]);
             pos[j].PresDivision();
             normals[j] =mesh->getNormal(face[j]);
             texture_coords[j]=mesh->getUV(i,j);
             texture_coords[j] /=pos[j].w;
             pos[j].w = 1.0f/pos[j].w;
-
         }
-        
-        drawTriangle(&pos[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex);
+        Vector3f n = Cross((world_coords[2]-world_coords[0]),(world_coords[1]-world_coords[0]));
+        n.Normalize();
+        float intensity = Dot(n,light_dir);
+        if (intensity>0.0)
+        {
+            if(type == GI_BARYCENTER)
+            drawTriangle(&pos[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex,intensity);
+            else
+            drawTriangle(&pos[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex,intensity);
+        }
+
     }
 }
 
@@ -135,7 +154,7 @@ Vector3f barycentric(Vector2<T0>p0,Vector2<T0>p1,Vector2<T0>p2,Vector3<T1>p)
     return Vector3f(1.0f-(bary.x+bary.y)/bary.z, bary.y/bary.z, bary.x/bary.z);
 }
 
-void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse)
+void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse,float col)
 {
     Vector2i bboxMin(0,0);
     Vector2i bboxMax(0,0);
@@ -172,7 +191,10 @@ void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& t
                     uv *=u;
                     
                     targetFrame.Zbuffer[zIndex]=z;
-                    targetFrame.drawPixel(p.x,p.y,diffuse.getColor(uv.x, uv.y));
+                    Color color = Color(col,col,col);
+//                    targetFrame.drawPixel(p.x,p.y,diffuse.getColor(uv.x, uv.y));
+                    targetFrame.drawPixel(p.x,p.y,color);
+
                 }
             }
         }
@@ -180,25 +202,12 @@ void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& t
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if 0
-//old shcool
-void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,const Color& col)
+void drawTriangle_scan(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuseTex)
 {
+    Vector2i p0 = Vector2i((verts[0].x+1.)*(targetFrame.getWidth()-1)/2., (verts[0].y+1.)*(targetFrame.getHeight()-1)/2.);
+    Vector2i p1 = Vector2i((verts[1].x+1.)*(targetFrame.getWidth()-1)/2., (verts[1].y+1.)*(targetFrame.getHeight()-1)/2.);
+    Vector2i p2 = Vector2i((verts[2].x+1.)*(targetFrame.getWidth()-1)/2., (verts[2].y+1.)*(targetFrame.getHeight()-1)/2.);
+    int p2Uv[3] = {0,1,2};
     if(p0.y==p1.y&&p1.y==p2.y)
     {
         return;
@@ -206,14 +215,17 @@ void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,c
     if(p0.y>p1.y)
     {
         std::swap(p0,p1);
+        std::swap(p2Uv[0],p2Uv[1]);
     }
     if(p0.y>p2.y)
     {
         std::swap(p0,p2);
+        std::swap(p2Uv[0],p2Uv[2]);
     }
     if(p1.y>p2.y)
     {
         std::swap(p1,p2);
+        std::swap(p2Uv[1],p2Uv[2]);
     }
     int totalHeight = p2.y-p0.y;
     int segmentHeight0 =p1.y-p0.y+1;
@@ -224,19 +236,30 @@ void drawTriangle(Vector2i p0,Vector2i p1,Vector2i p2,FrameBuffer& targetFrame,c
         bool isUpper = y>p1.y || p1.y==p0.y;
         float a = static_cast<float>(y - p0.y)/totalHeight;
         float b = isUpper?static_cast<float>(y - p1.y)/segmentHeight1:static_cast<float>(y - p0.y)/segmentHeight0;
-        int x0 = p0.x +(p2.x-p0.x)*a;
-        int x1 = isUpper?p1.x +(p2.x-p1.x)*b:p0.x +(p1.x-p0.x)*b;
-        
+        int x0 = lerp(p0.x, p2.x,a);
+        float w0 = lerp(verts[p2Uv[0]].w,verts[p2Uv[2]].w,a);
+        Vector2f uv0 = lerp(uvs[p2Uv[0]],uvs[p2Uv[2]],a);
+        int x1 = isUpper?lerp(p1.x, p2.x,b):lerp(p0.x, p1.x,b);
+        float w1 = isUpper?lerp(verts[p2Uv[1]].w, verts[p2Uv[2]].w,b):lerp(verts[p2Uv[0]].w,verts[p2Uv[1]].w,b);
+
+        Vector2f uv1 =isUpper? lerp(uvs[p2Uv[1]],uvs[p2Uv[2]],b):lerp(uvs[p2Uv[0]],uvs[p2Uv[1]],b);
         if(x0>x1)
         {
             std::swap(x0,x1);
+            std::swap(uv0,uv1);
+            std::swap(w0,w1);
         }
         for(int x =x0;x<=x1;x++)
         {
-            targetFrame.drawPixel(x, y, col);
+            if(x1!=x0)
+            {
+                Vector2f uv = lerp(uv0,uv1,(x-x0)/(x1-x0));
+                float w = 1.0/lerp(w0,w1,(x-x0)/(x1-x0));
+//                uv *=w;
+                targetFrame.drawPixel(x,y,diffuseTex.getColor(uv.x, uv.y));
+            }
         }
     }
 }
-#endif
 
     

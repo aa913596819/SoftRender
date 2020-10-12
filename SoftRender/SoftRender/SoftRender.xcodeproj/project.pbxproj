@@ -10,7 +10,7 @@
 		2B00E93725061DAC000E2845 /* GIQuaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B00E93525061DAC000E2845 /* GIQuaternion.cpp */; };
 		2B379C6B24FCD62500A8D8A1 /* GIMatrix4x4f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B379C6924FCD62500A8D8A1 /* GIMatrix4x4f.cpp */; };
 		2B58F50A24E264E200B33D07 /* Draw2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B58F50824E264E200B33D07 /* Draw2d.cpp */; };
-		2B64D29524E53B7800790A38 /* GMColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B64D29324E53B7800790A38 /* GMColor.cpp */; };
+		2B64D29524E53B7800790A38 /* GIColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B64D29324E53B7800790A38 /* GIColor.cpp */; };
 		2B6E2F8C24E28E67000032B8 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B6E2F8A24E28E67000032B8 /* Mesh.cpp */; };
 		2B6E2F8F24E2C5EB000032B8 /* lib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B6E2F8E24E2C5EB000032B8 /* lib */; };
 		2B8814EF24DF9835004E4B7B /* tgaimage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B8814ED24DF9835004E4B7B /* tgaimage.cpp */; };
@@ -20,6 +20,7 @@
 		2BA9CB0724E512A2002A798F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA9CB0624E512A2002A798F /* IOKit.framework */; };
 		2BA9CB0924E512A9002A798F /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA9CB0824E512A9002A798F /* CoreVideo.framework */; };
 		2BA9CB0C24E5291F002A798F /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9CB0A24E5291F002A798F /* FrameBuffer.cpp */; };
+		2BC25C0A2531933700AE458C /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC25C082531933700AE458C /* Camera.cpp */; };
 		2BE1247124E4DD090090F1A9 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE1246F24E4DD090090F1A9 /* OpenGL.framework */; };
 		2BE1247224E4DD090090F1A9 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE1247024E4DD090090F1A9 /* GLUT.framework */; };
 		2BFCCF4424DC3BAD00702712 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BFCCF4324DC3BAD00702712 /* main.cpp */; };
@@ -47,7 +48,7 @@
 		2B58F4F124E0F31B00B33D07 /* GIVector3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIVector3.h; sourceTree = "<group>"; };
 		2B58F50824E264E200B33D07 /* Draw2d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Draw2d.cpp; sourceTree = "<group>"; };
 		2B58F50924E264E200B33D07 /* Draw2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Draw2d.h; sourceTree = "<group>"; };
-		2B64D29324E53B7800790A38 /* GMColor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GMColor.cpp; sourceTree = "<group>"; };
+		2B64D29324E53B7800790A38 /* GIColor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GIColor.cpp; sourceTree = "<group>"; };
 		2B64D29424E53B7800790A38 /* GIColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIColor.h; sourceTree = "<group>"; };
 		2B6E2F8A24E28E67000032B8 /* Mesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		2B6E2F8B24E28E67000032B8 /* Mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
@@ -66,6 +67,8 @@
 		2BA9CB0824E512A9002A798F /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		2BA9CB0A24E5291F002A798F /* FrameBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FrameBuffer.cpp; sourceTree = "<group>"; };
 		2BA9CB0B24E5291F002A798F /* FrameBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FrameBuffer.h; sourceTree = "<group>"; };
+		2BC25C082531933700AE458C /* Camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		2BC25C092531933700AE458C /* Camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		2BE1246F24E4DD090090F1A9 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2BE1247024E4DD090090F1A9 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		2BFCCF4024DC3BAD00702712 /* SoftRender */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SoftRender; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,7 +105,7 @@
 		2B58F4ED24E0090A00B33D07 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2B64D29324E53B7800790A38 /* GMColor.cpp */,
+				2B64D29324E53B7800790A38 /* GIColor.cpp */,
 				2B00E93525061DAC000E2845 /* GIQuaternion.cpp */,
 				2B379C6924FCD62500A8D8A1 /* GIMatrix4x4f.cpp */,
 				2B8A522D24F942C400E8247B /* GIMatrix3x3f.cpp */,
@@ -139,6 +142,7 @@
 		2B58F50B24E264E900B33D07 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				2BC25C082531933700AE458C /* Camera.cpp */,
 				2BA9CB0A24E5291F002A798F /* FrameBuffer.cpp */,
 				2B58F50824E264E200B33D07 /* Draw2d.cpp */,
 				2B6E2F8A24E28E67000032B8 /* Mesh.cpp */,
@@ -152,6 +156,7 @@
 				2B58F50924E264E200B33D07 /* Draw2d.h */,
 				2B6E2F8B24E28E67000032B8 /* Mesh.h */,
 				2BA9CB0B24E5291F002A798F /* FrameBuffer.h */,
+				2BC25C092531933700AE458C /* Camera.h */,
 			);
 			path = inc;
 			sourceTree = "<group>";
@@ -259,9 +264,10 @@
 			files = (
 				2B8814EF24DF9835004E4B7B /* tgaimage.cpp in Sources */,
 				2BFCCF4424DC3BAD00702712 /* main.cpp in Sources */,
+				2BC25C0A2531933700AE458C /* Camera.cpp in Sources */,
 				2BA9CB0C24E5291F002A798F /* FrameBuffer.cpp in Sources */,
 				2B6E2F8C24E28E67000032B8 /* Mesh.cpp in Sources */,
-				2B64D29524E53B7800790A38 /* GMColor.cpp in Sources */,
+				2B64D29524E53B7800790A38 /* GIColor.cpp in Sources */,
 				2B379C6B24FCD62500A8D8A1 /* GIMatrix4x4f.cpp in Sources */,
 				2B8A522F24F942C400E8247B /* GIMatrix3x3f.cpp in Sources */,
 				2B58F50A24E264E200B33D07 /* Draw2d.cpp in Sources */,

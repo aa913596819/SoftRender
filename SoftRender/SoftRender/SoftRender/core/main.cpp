@@ -11,9 +11,20 @@
 #include "Draw2d.h"
 #include "GIVector2.h"
 #include "GIVector3.h"
-
+#include "GIType.h"
+#include "Camera.h"
 const int width  = 800;
 const int height = 800;
+
+void processInput(GLFWwindow* window,Camera& cam);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+float lastX = 0.0f;
+float lastY = 0.0f;
+float firstMouse =true;
+Camera cam(Vector3f(0.0,0.0,-5.0f),Vector3f(0.0,1.0,0.0),0.0,0.0);
 //argc和argv参数在用命令行编译程序时有用。main( int argc, char* argv[], char **env ) 中
 //第一个参数，int型的argc，为整型，用来统计程序运行时发送给main函数的命令行参数的个数，在VS中默认值为1。
 int main(int argc, char** argv) {
@@ -33,9 +44,15 @@ int main(int argc, char** argv) {
         return -1;
     }
     glfwMakeContextCurrent(win);
+    glfwSetCursorPosCallback(win, mouse_callback);
     while(!glfwWindowShouldClose(win)){
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        processInput(win,cam);
         frameBuffer.clear(Color::Black);
-        drawMesh(model, frameBuffer);
+//        drawMesh(model, frameBuffer,GI_BARYCENTER);
+        drawMesh(cam,model, frameBuffer,GI_SCAN);
         frameBuffer.draw();
         glfwSwapBuffers(win);
         glfwPollEvents();
@@ -44,3 +61,35 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+void processInput(GLFWwindow* window,Camera& cam)
+{
+    
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cam.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cam.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cam.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cam.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+void mouse_callback(GLFWwindow* window,double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    cam.ProcessMouse(xoffset, yoffset);
+}

@@ -1,5 +1,5 @@
 //
-//  Vector3.hå
+//  GIVector3.h
 //  SoftRender
 //
 //  Created by linweifeng on 2020/8/10.
@@ -103,7 +103,7 @@ inline Vector3<T> Normalize(const Vector3<T>& vec)
 //叉乘
 
 template<typename T>
-inline Vector3<T> Cross(Vector3<T>& vec0,Vector3<T>& vec1)
+inline Vector3<T> Cross(const Vector3<T>& vec0,const Vector3<T>& vec1)
 {
     return Vector3<T>(vec0.y*vec1.z - vec0.z*vec1.y,
                     vec0.z*vec1.x - vec0.x*vec1.z,
@@ -183,6 +183,16 @@ Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& vec)
     z += vec.z;
     return *this;
 }
+
+template<typename T>
+Vector3<T>& Vector3<T>::operator-=(const Vector3<T>& vec)
+{
+    x -= vec.x;
+    y -= vec.y;
+    z -= vec.z;
+    return *this;
+}
+
 
 template<typename T>
 Vector3<T>& Vector3<T>::operator*=(T s)

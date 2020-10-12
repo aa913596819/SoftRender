@@ -44,6 +44,29 @@ Matrix4x4f::Matrix4x4f(float data[16])
     }
 }
 
+Matrix4x4f::Matrix4x4f(float data)
+{
+    m_Data[0] = data;
+    m_Data[1] = 0.0f;
+    m_Data[2] = 0.0f;
+    m_Data[3] = 0.0f;
+    
+    m_Data[4] = 0.0f;
+    m_Data[5] = data;
+    m_Data[6] = 0.0f;
+    m_Data[7] = 0.0f;
+    
+    m_Data[8] = 0.0f;
+    m_Data[9] = 0.0f;
+    m_Data[10] = data;
+    m_Data[11] = 0.0f;
+
+    m_Data[12] = 0.0f;
+    m_Data[13] = 0.0f;
+    m_Data[14] = 0.0f;
+    m_Data[15] = data;
+}
+
 Matrix4x4f::Matrix4x4f(float m00,float m01,float m02,float m03,float m10,float m11,float m12,float m13,
     float m20,float m21,float m22,float m23,float m30,float m31,float m32,float m33)
 {

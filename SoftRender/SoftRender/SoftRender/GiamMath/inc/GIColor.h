@@ -1,5 +1,5 @@
 //
-//  Color.hpp
+//  GIColor.h
 //  SoftRender
 //
 //  Created by linweifeng on 2020/8/13.

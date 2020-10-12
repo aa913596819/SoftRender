@@ -56,6 +56,8 @@ void Vector4<T>::PresDivision()
     x /=w;
     y /=w;
     z /=w;
+//    w = 1.0f/w;
+
 }
 
 
