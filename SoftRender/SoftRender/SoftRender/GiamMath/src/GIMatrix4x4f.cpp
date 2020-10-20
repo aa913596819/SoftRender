@@ -27,10 +27,10 @@ void MultiplyMatrix4x4f(const Matrix4x4f& lhs,const Matrix4x4f& rhs,Matrix4x4f& 
 {
     for(int i = 0; i < 4; i++)
     {
-        res[i] = lhs[i] * rhs[0] + lhs[i+4] * rhs[1] + lhs[i+8] * rhs[2] + lhs[i+12] * rhs[3];
-        res[i+4] = lhs[i] * rhs[4] + lhs[i+4] * rhs[5] + lhs[i+8] * rhs[6] + lhs[i+12] * rhs[7];
-        res[i+8] = lhs[i] * rhs[8] + lhs[i+4] * rhs[9] + lhs[i+8] * rhs[10] + lhs[i+12] * rhs[11];
-        res[i+12] = lhs[i] * rhs[12] + lhs[i+4] * rhs[13] + lhs[i+8] * rhs[14] + lhs[i+12] * rhs[15];
+        res[i] = rhs[i] * lhs[0] + rhs[i+4] * lhs[1] + rhs[i+8] * lhs[2] + rhs[i+12] * lhs[3];
+        res[i+4] = rhs[i] * lhs[4] + rhs[i+4] * lhs[5] + rhs[i+8] * lhs[6] + rhs[i+12] * lhs[7];
+        res[i+8] = rhs[i] * lhs[8] + rhs[i+4] * lhs[9] + rhs[i+8] * lhs[10] + rhs[i+12] * lhs[11];
+        res[i+12] = rhs[i] * lhs[12] + rhs[i+4] * lhs[13] + rhs[i+8] * lhs[14] + rhs[i+12] * lhs[15];
     }
 }
 
@@ -245,8 +245,8 @@ Matrix4x4f Matrix4x4f::Perspective(float fov,float aspect,float nearClip,float f
     Matrix4x4f mat4;
     mat4.SetIdentity();
     float halfFov_rad = Deg2Rad(fov/2.0f);
-//    float cot = cos(halfFov_rad)/sin(halfFov_rad);
-    float cot =  1 / (float)tan(halfFov_rad);
+    float cot = cos(halfFov_rad)/sin(halfFov_rad);
+//    float cot =  1 / (float)tan(halfFov_rad);
     mat4.Get(0, 0) = cot/aspect;
 
     mat4.Get(1, 1) = cot;
@@ -260,6 +260,46 @@ Matrix4x4f Matrix4x4f::Perspective(float fov,float aspect,float nearClip,float f
     return mat4;
 }
 
+/*
+*
+*旋转矩阵是正交矩阵，所以直接用转置矩阵即可
+*
+* see http://www.songho.ca/opengl/gl_camera.html
+*/
+
+Matrix4x4f Matrix4x4f::LookAt(const Vector3f &pos, const Vector3f &cameraFront, const Vector3f &cameraUp, const Vector3f &cameraRight)
+{
+    Matrix4x4f matrix;
+    matrix.SetIdentity();
+    matrix.m_Data[0] = cameraRight.x;
+    matrix.m_Data[4] = cameraRight.y;
+    matrix.m_Data[8] = cameraRight.z;
+    
+    matrix.m_Data[1] = cameraUp.x;
+    matrix.m_Data[5] = cameraUp.y;
+    matrix.m_Data[9] = cameraUp.z;
+    
+    matrix.m_Data[2] = cameraFront.x;
+    matrix.m_Data[6] = cameraFront.y;
+    matrix.m_Data[10] = cameraFront.z;
+    
+//    matrix.m_Data[12] = Dot(pos, -cameraRight);
+//    matrix.m_Data[13] = Dot(pos, -cameraUp);
+//    matrix.m_Data[14] = Dot(pos, -cameraFront);
+    
+    matrix.m_Data[12] = -cameraRight.x * pos.x - cameraRight.y * pos.y - cameraRight.z *pos.z;
+    matrix.m_Data[13] = -cameraUp.x * pos.x - cameraUp.y * pos.y - cameraUp.z *pos.z;
+    matrix.m_Data[14] = -cameraFront.x * pos.x - cameraFront.y * pos.y - cameraFront.z *pos.z;
+    
+    return matrix;
+}
+
+
+Matrix4x4f Matrix4x4f::LookAt(const Vector3f &pos, const Vector3f &cameraFront, const Vector3f &worldUp)
+{
+    Matrix4x4f a;
+    return a;
+}
 Matrix4x4f Matrix4x4f::operator*(const Matrix4x4f &mat4)
 {
     Matrix4x4f temp;

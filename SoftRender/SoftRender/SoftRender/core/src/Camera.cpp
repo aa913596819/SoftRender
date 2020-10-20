@@ -21,9 +21,12 @@ void Camera::update()
     up = GiamEngine::Normalize(GiamEngine::Cross(front, right));
     //??????????
     //up = GiamEngine::Normalize(GiamEngine::Cross(right, front));
-
 }
 
+GiamEngine::Matrix4x4f Camera::GetProjMatrix()
+{
+    return GiamEngine::Matrix4x4f::Perspective(fov, aspect, nearClip, farClip);
+}
 
 
 GiamEngine::Matrix4x4f Camera::GetViewMatrix()
@@ -33,8 +36,13 @@ GiamEngine::Matrix4x4f Camera::GetViewMatrix()
     GiamEngine::Matrix4x4f translate = GiamEngine::Matrix4x4f::Translate(-pos);
     GiamEngine::Matrix4x4f negate = GiamEngine::Matrix4x4f(1.0);
     negate.Get(2, 2) = -1.0f;
-    GiamEngine::Matrix4x4f viewMatrix = rotate0*rotate1*translate*negate;
+    //注意由于正常来说是 先旋转再平移
+    //所以我们这里在求逆矩阵的时候 应该是先 平移再旋转 所以 是rotate*traslate
+    //先旋转再平移 的逆运算 先平移再旋转
+    GiamEngine::Matrix4x4f viewMatrix = rotate1*translate;
     return viewMatrix;
+    
+//    return GiamEngine::Matrix4x4f::LookAt(pos, front, up, right);
 }
 
 void Camera::ProcessKeyboard(Camera_Movement m, float deltaTime)

@@ -11,8 +11,24 @@
 #include"GIVector3.h"
 #include"GIMatrix4x4f.h"
 #include<iostream>
+#include<vector>
 #include"Camera.h"
 
+const static Vector4f ViewFrustum[6] =
+{
+    //x > -1.0
+    Vector4f(1.0,0.0,0.0,1.0),
+    //x < 1.0
+    Vector4f(-1.0,0.0,0.0,1.0),
+    //y <1.0
+    Vector4f(0.0,-1.0,0.0,1.0),
+    //y >-1.0
+    Vector4f(0.0,1.0,0.0,1.0),
+    //z <1.0
+    Vector4f(0.0,0.0,-1.0,1.0),
+    //z >0.0
+    Vector4f(0.0,0.0,1.0,1.0)
+};
 template<typename T>
 T lerp(T a, T b, float factor)
 {
@@ -24,6 +40,103 @@ void swap(int& a, int& b)
     a = b;
     b = temp;
 }
+
+bool isInside(Vector4f p,Vector4f line)
+{
+    return p.x * line.x + p.y * line.y + p.z * line.z + p.w*line.w > 0;
+};
+//0为全部在视锥体内，1为全部在视锥体外 2为需要裁剪
+//int checkTriangle(Vector4f p0,Vector4f p1,Vector4f p2)
+//{
+//    int flag = 0;
+//    if(isInside(p0,))
+//}
+
+//裁剪
+//Sutherland–Hodgman算法
+//详见https://zh.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman%E7%AE%97%E6%B3%95
+//or  https://blog.csdn.net/damotiansheng/article/details/43274183
+
+void clip(std::vector<Vector4f>& vertices,std::vector<Vector3f>& normals,std::vector<Vector2f>& texture_coords)
+{
+    
+    //在 NDC 坐标中需要满足 Ax/w +By/w + Cz/w + D > 0
+    //两边同乘w(w为-Zview,而在视锥体内的z值都为负数) 可得 Ax +By + Cz + Dw >0 (裁剪空间中)
+    std::vector<Vector4f>inputVertices;
+    std::vector<Vector3f>inputNormal;
+    std::vector<Vector2f>inputUV;
+
+
+    //p为裁剪空间坐标
+
+    
+    auto getWeight = [](Vector4f p0, Vector4f p1,Vector4f line)
+    {
+        float weight0 = p0.x * line.x + p0.y * line.y + p0.z * line.z;
+        float weight1 = p1.x * line.x + p1.y * line.y + p1.z * line.z;
+        return weight1/(weight0-weight1);
+    };
+    
+    //注意:这里偷了个懒，每一步用一个裁剪平面去裁剪多边形时，应该使用的是上一步裁剪得到的多边形。
+    //但这里一直使用的都是原多边形。由于是锥体是一个规则的多边形，所以这样做没问题
+    for(int i = 0 ; i < 6 ; i++)
+    {
+        if(i ==4)
+        {
+            int a =50;
+        }
+        inputVertices  = vertices;
+        vertices.clear();
+        inputUV = texture_coords;
+        texture_coords.clear();
+        inputNormal = normals;
+        normals.clear();
+        
+        for(int j = 0 ; j< inputVertices.size() ; j++)
+        {
+            int LastIndex = (j + inputVertices.size()-1)%inputVertices.size();
+            if(isInside(inputVertices[j],ViewFrustum[i]))
+            {
+                if(!isInside(inputVertices[LastIndex],ViewFrustum[i]))
+                {
+                    
+                    float weight = getWeight(inputVertices[LastIndex],inputVertices[j],ViewFrustum[i]);
+                    Vector4f intersect = lerp(inputVertices[LastIndex],inputVertices[j],weight);
+                    inputVertices.push_back(intersect);
+                    Vector3f intersectNormal = Vector3f(1.0f,1.0f,1.0f);
+                    Vector2f intersectUV = lerp(inputUV[LastIndex],inputUV[j],weight);
+
+                    vertices.push_back(intersect);
+                    normals.push_back(intersectNormal);
+                    texture_coords.push_back(intersectUV);
+
+                }
+                vertices.push_back(inputVertices[j]);
+                normals.push_back(inputNormal[j]);
+                texture_coords.push_back(inputUV[j]);
+            }
+            else if(isInside(inputVertices[LastIndex],ViewFrustum[i]))
+            {
+                float weight = getWeight(inputVertices[LastIndex],inputVertices[j],ViewFrustum[i]);
+                Vector4f intersect = lerp(inputVertices[LastIndex],inputVertices[j],weight);
+                inputVertices.push_back(intersect);
+                Vector3f intersectNormal = lerp(inputNormal[LastIndex],inputNormal[j],weight);
+                Vector2f intersectUV = lerp(inputUV[LastIndex],inputUV[j],weight);
+
+                vertices.push_back(intersect);
+                normals.push_back(intersectNormal);
+                texture_coords.push_back(intersectUV);
+            }
+        }
+    }
+//    vertices.clear();
+//    vertices = inputVertices;
+//    normals.clear();
+//    normals = inputNormal;
+//    texture_coords.clear();
+//    texture_coords = inputUV;
+}
+
 
 
 void drawPoint(int x0,int y0,FrameBuffer& targetFrame,const Color& col)
@@ -88,15 +201,13 @@ void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col)
 void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
 {
     Matrix4x4f modelMat4;
-    modelMat4 = Matrix4x4f::Rotate(0.0, Vector3f(0.0f,1.0f,0.0f));
+    modelMat4 = Matrix4x4f::Translate(Vector3f(0.0,0.0,0.0));
     
     Matrix4x4f viewMat4 = cam.GetViewMatrix();
     
-    Matrix4x4f projectMat4;
-    projectMat4 = Matrix4x4f::Perspective(60, 4.0/3.0, 1.0,40.0);
+    Matrix4x4f projectMat4 = cam.GetProjMatrix();
     
-    Matrix4x4f mvp = modelMat4*viewMat4*projectMat4;
-//    Matrix4x4f mvp = modelMat4;
+    Matrix4x4f mvp = projectMat4*viewMat4*modelMat4;
 
     Vector3f light_dir(0,0,-1);
     TGAImage diffuseTex;
@@ -107,34 +218,53 @@ void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
     for (int i=0; i<mesh->facesNum(); i++)
     {
         std::vector<int> face = mesh->getFace(i);
-        Vector2f texture_coords[3];
-        Vector4f pos[3];
-        Vector3f normals[3];
-        Vector3f world_coords[3];
+        
+        std::vector<Vector2f> texture_coords;
+        std::vector<Vector4f> pos;
+        std::vector<Vector3f> normals;
+//        Vector3f world_coords[3];
 
         for (int j=0; j<3; j++) {
-            pos[j]  = mul(mvp, mesh->getVertex(face[j]));
-            pos[j].PresDivision();
-
-            world_coords[j] =mesh->getVertex(face[j]);
+            pos.push_back(mul(mvp, mesh->getVertex(face[j])));
+//            pos[j].PresDivision();
+//            world_coords[j] =mesh->getVertex(face[j]);
             
-            normals[j] =mesh->getNormal(face[j]);
-            texture_coords[j]=mesh->getUV(i,j);
+            normals.push_back(mesh->getNormal(face[j]));
+            texture_coords.push_back(mesh->getUV(i,j));
+//            texture_coords[j] /=pos[j].w;
+//            pos[j].w = 1.0f/pos[j].w;
+        }
+        
+        if(pos[0].z < pos[0].w)
+        {
+            int a = 50;
+        }
+//        clip(pos, normals, texture_coords);
+        if(pos.size()==0)
+        {
+            continue;
+        }
+        for(int j = 0 ; j<pos.size();j++)
+        {
+            pos[j].PresDivision();
+            if(pos[j].z <1.0)
+            {
+                int a =50;
+            }
             texture_coords[j] /=pos[j].w;
             pos[j].w = 1.0f/pos[j].w;
         }
-        Vector3f n = Cross((world_coords[2]-world_coords[0]),(world_coords[1]-world_coords[0]));
-        n.Normalize();
-        float intensity = Dot(n,light_dir);
-        if (intensity<0.0)
+//        Vector3f n = Cross((world_coords[2]-world_coords[0]),(world_coords[1]-world_coords[0]));
+//        n.Normalize();
+//        float intensity = Dot(n,light_dir);
+//        if (intensity<0.0)
+//        {
+//            intensity = 0.0f;
+//        }
+        for(int k = 0 ; k <pos.size()-2;k++)
         {
-            intensity = 0.0f;
+            drawTriangle(&pos[k], &normals[k], &texture_coords[k], targetFrame, diffuseTex,k);
         }
-        if(type == GI_BARYCENTER)
-        drawTriangle(&pos[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex,intensity);
-        else
-        drawTriangle(&pos[0], &normals[0], &texture_coords[0], targetFrame, diffuseTex,intensity);
-
     }
 }
 
@@ -156,7 +286,7 @@ Vector3f barycentric(Vector2<T0>p0,Vector2<T0>p1,Vector2<T0>p2,Vector3<T1>p)
     return Vector3f(1.0f-(bary.x+bary.y)/bary.z, bary.y/bary.z, bary.x/bary.z);
 }
 
-void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse,float col)
+void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse,int k )
 {
     Vector2i bboxMin(0,0);
     Vector2i bboxMax(0,0);
@@ -193,8 +323,10 @@ void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& t
                     uv *=u;
                     
                     targetFrame.Zbuffer[zIndex]=z;
-                    Color color = Color(col,col,col);
                     targetFrame.drawPixel(p.x,p.y,diffuse.getColor(uv.x, uv.y));
+                    
+                    
+//                    Color color = Color(col,col,col);
 //                    targetFrame.drawPixel(p.x,p.y,color);
                 }
             }

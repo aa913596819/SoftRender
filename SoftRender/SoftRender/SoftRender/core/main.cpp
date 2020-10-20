@@ -13,6 +13,32 @@
 #include "GIVector3.h"
 #include "GIType.h"
 #include "Camera.h"
+#include <chrono>
+
+double fps()
+{
+    static double fps = 0.0;
+    static int frameCount = 0;
+    static auto lastTime = std::chrono::system_clock::now();
+    static auto curTime = std::chrono::system_clock::now();
+    
+    curTime = std::chrono::system_clock::now();
+    
+    auto duration = duration_cast<std::chrono::microseconds>(curTime - lastTime);
+    double duration_s = double(duration.count()) * std::chrono::microseconds::period::num / std::chrono::microseconds::period::den;
+
+    if (duration_s > 2)//2秒之后开始统计FPS
+    {
+        fps = frameCount / duration_s;
+        frameCount = 0;
+        lastTime = curTime;
+    }
+
+    ++frameCount;
+
+    return fps;
+}
+
 const int width  = 800;
 const int height = 800;
 
@@ -24,7 +50,7 @@ float lastFrame = 0.0f;
 float lastX = 0.0f;
 float lastY = 0.0f;
 float firstMouse =true;
-Camera cam(Vector3f(0.0,0.0,-3.0f),Vector3f(0.0,1.0,0.0),0.0,0.0);
+Camera cam(Vector3f(0.0,10.0,-10.0f),Vector3f(0.0,1.0,0.0),30.0,0.0);
 //argc和argv参数在用命令行编译程序时有用。main( int argc, char* argv[], char **env ) 中
 //第一个参数，int型的argc，为整型，用来统计程序运行时发送给main函数的命令行参数的个数，在VS中默认值为1。
 int main(int argc, char** argv) {
@@ -56,6 +82,7 @@ int main(int argc, char** argv) {
         frameBuffer.draw();
         glfwSwapBuffers(win);
         glfwPollEvents();
+        std::cout<<"fps:"<<fps()<<std::endl;
     }
     glfwTerminate();
     return 0;
@@ -63,7 +90,6 @@ int main(int argc, char** argv) {
 
 void processInput(GLFWwindow* window,Camera& cam)
 {
-    
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)

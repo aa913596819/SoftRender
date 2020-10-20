@@ -42,6 +42,8 @@ public:
     static Matrix4x4f Scale(const Vector3f& scalar);
     static Matrix4x4f Translate(const Vector3f& scalar);
     static Matrix4x4f Perspective(float fov,float aspect,float nearClip,float farClip);
+    static Matrix4x4f LookAt(const Vector3f& pos,const Vector3f& cameraFront,const Vector3f& worldUp);
+    static Matrix4x4f LookAt(const Vector3f& pos,const Vector3f& cameraFront,const Vector3f& cameraUp,const Vector3f& cameraRight);
 };
 Vector4f mul(const Matrix4x4f& mat4, const Vector4f& vec4);
 
