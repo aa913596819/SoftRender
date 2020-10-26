@@ -10,8 +10,8 @@
 #define GIVECTOR3_H
 #include <cmath>
 #include<iostream>
-namespace GiamEngine
-{
+#include "GIMacro.h"
+NAMESPACE_GIAM_ENGINE_BEGIN
 template<typename T>
 class Vector3
 {
@@ -278,6 +278,6 @@ const inline T& Vector3<T>::operator[](const int i)const
         return z;
     }
 }
-}
+NAMESPACE_GIAM_ENGINE_END
 #endif /* GIVECTOR3_H */
     

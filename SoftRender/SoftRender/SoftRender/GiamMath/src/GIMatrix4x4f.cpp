@@ -10,9 +10,8 @@
 #include "GIMatrix4x4f.h"
 #include "GIFloatConversion.h"
 #include <cmath>
-using namespace GiamEngine;
-
-
+#include"GIMacro.h"
+NAMESPACE_GIAM_ENGINE_USING
 Vector4f GiamEngine::mul(const Matrix4x4f& mat4, const Vector4f& vec4)
 {
     float x = mat4.m_Data[0] * vec4.x + mat4.m_Data[1] * vec4.y + mat4.m_Data[2] * vec4.z + mat4.m_Data[3] * vec4.w;

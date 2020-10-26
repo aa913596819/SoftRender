@@ -9,6 +9,8 @@
 #include "Camera.h"
 #include "GIFloatConversion.h"
 #include <cmath>
+
+NAMESPACE_GIAM_ENGINE_BEGIN
 void Camera::update()
 {
     GiamEngine::Vector3f f;
@@ -39,7 +41,8 @@ GiamEngine::Matrix4x4f Camera::GetViewMatrix()
     //注意由于正常来说是 先旋转再平移
     //所以我们这里在求逆矩阵的时候 应该是先 平移再旋转 所以 是rotate*traslate
     //先旋转再平移 的逆运算 先平移再旋转
-    GiamEngine::Matrix4x4f viewMatrix = rotate1*translate;
+    GiamEngine::Matrix4x4f viewMatrix = rotate0*rotate1*translate;
+    viewMatrix = negate*viewMatrix;
     return viewMatrix;
     
 //    return GiamEngine::Matrix4x4f::LookAt(pos, front, up, right);
@@ -72,3 +75,4 @@ void Camera::ProcessMouse(float xOffset,float yOffset)
     }
     update();
 }
+NAMESPACE_GIAM_ENGINE_END

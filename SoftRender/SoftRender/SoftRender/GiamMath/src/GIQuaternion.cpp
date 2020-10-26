@@ -8,7 +8,8 @@
 
 #include "GIQuaternion.h"
 #include <math.h>
-using namespace GiamEngine;
+#include"GIMacro.h"
+NAMESPACE_GIAM_ENGINE_USING
 Quaternion::Quaternion(float inX, float inY, float inZ, float inW):x(inX),y(inY),z(inZ),w(inW)
 {
 }

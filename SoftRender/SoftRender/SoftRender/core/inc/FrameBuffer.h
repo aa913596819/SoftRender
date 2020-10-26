@@ -11,15 +11,17 @@
 #include "GIVector2.h"
 #include "GIVector3.h"
 #include "GIColor.h"
+#include "vector"
+#include"GIMacro.h"
 //这里暂定用数组存储Buffer
-using namespace GiamEngine;
+NAMESPACE_GIAM_ENGINE_BEGIN
 class FrameBuffer
 {
 private:
     int width,height,channels;
-    unsigned char* ColorBuffer;
 public:
-    float* Zbuffer;
+    std::vector<float>Zbuffer;
+    std::vector<unsigned char>ColorBuffer;
     FrameBuffer(const int& w,const  int& h,const  int& c);
     void clear(const Color &col);
     ~FrameBuffer();
@@ -28,8 +30,9 @@ public:
     int getChannels();
     void drawPixel(int x,int y,const Color& col);
     void draw();
+    void reSize(int width,int height);
 };
 
-
+NAMESPACE_GIAM_ENGINE_END
 
 #endif /* FrameBuffer_h */

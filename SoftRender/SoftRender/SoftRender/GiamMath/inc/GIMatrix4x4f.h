@@ -13,9 +13,8 @@
 #include"GIMatrix3x3f.h"
 
 
-///
-namespace GiamEngine
-{
+#include"GIMacro.h"
+NAMESPACE_GIAM_ENGINE_BEGIN
 class Matrix4x4f
 {
 public:
@@ -47,7 +46,7 @@ public:
 };
 Vector4f mul(const Matrix4x4f& mat4, const Vector4f& vec4);
 
-}
+NAMESPACE_GIAM_ENGINE_END
 
 
 #endif /* GIMATRIX4x4f_H */

@@ -11,7 +11,9 @@
 #include"GIVector3.h"
 #include"GIVector2.h"
 #include<vector>
-using namespace GiamEngine;
+#include"GIMacro.h"
+
+NAMESPACE_GIAM_ENGINE_BEGIN
 class Mesh
 {
 private:
@@ -34,5 +36,5 @@ public:
     Vector3f getNormal(int index);
     Vector2f getUV(int faceIndex,int vertexIndex);
 };
-
+NAMESPACE_GIAM_ENGINE_END
 #endif /* Mesh_h */

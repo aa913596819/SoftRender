@@ -8,8 +8,8 @@
 
 #ifndef GICOLOR_H
 #define GICOLOR_H
-namespace GiamEngine
-{
+#include"GIMacro.h"
+NAMESPACE_GIAM_ENGINE_BEGIN
 class Color
 {
 public:
@@ -33,5 +33,5 @@ public:
     static const Color Green;
     static const Color Blue;
 };
-}
+NAMESPACE_GIAM_ENGINE_END
 #endif /* GICOLOR_H */

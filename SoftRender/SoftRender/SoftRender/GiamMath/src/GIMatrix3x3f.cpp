@@ -8,7 +8,8 @@
 
 #include "GIMatrix3x3f.h"
 #include "GIMatrix4x4f.h"
-using namespace GiamEngine;
+#include"GIMacro.h"
+NAMESPACE_GIAM_ENGINE_USING
 float& Matrix3x3f::Get(int row, int colum)
 {
     return m_Data[row + (colum*3)];

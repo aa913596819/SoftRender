@@ -11,13 +11,16 @@
 #define CAMERA_H
 #include"GIVector3.h"
 #include"GIMatrix4x4f.h"
+#include"GIMacro.h"
+
+NAMESPACE_GIAM_ENGINE_BEGIN
 const float DEF_YAW          = -90.0f;
-const float DEF_FOV          = 45.0f;
+const float DEF_FOV          = 60.0;
 const float DEF_SPEED        = 2.0f;
 const float DEF_SENSITIVITY  = 0.1f;
 const float DEF_PITCH        = 0.0f;
 const float DEF_NEARCLIP     = 0.1f;
-const float DEF_FARCLIP      = 1.0f;
+const float DEF_FARCLIP      = 40.0f;
 const float DEF_ASPECT       = 1.3333f;
 enum Camera_Movement
 {
@@ -30,12 +33,12 @@ class Camera
 {
 private:
     void update();
-    GiamEngine::Vector3f worldUp;
+    Vector3f worldUp;
 public:
-    GiamEngine::Vector3f pos;
-    GiamEngine::Vector3f front;
-    GiamEngine::Vector3f up;
-    GiamEngine::Vector3f right;
+    Vector3f pos;
+    Vector3f front;
+    Vector3f up;
+    Vector3f right;
 
     float aspect;
     float yaw;
@@ -46,14 +49,14 @@ public:
     float nearClip;
     float farClip;
     
-    Camera(GiamEngine::Vector3f Pos = GiamEngine::Vector3f(0.0f, 0.0f, 0.0f), GiamEngine::Vector3f Up = GiamEngine::Vector3f(0.0f, 1.0f, 0.0f), float Pitch = DEF_PITCH,float Yaw = DEF_YAW) : pos(Pos),front(GiamEngine::Vector3f(0.0f, 0.0f, -1.0f)),worldUp(Up),yaw(Yaw),pitch(Pitch) ,moveSpeed(DEF_SPEED), mouseSensitivity(DEF_SENSITIVITY), fov(DEF_FOV),nearClip(DEF_NEARCLIP),farClip(DEF_FARCLIP),aspect(DEF_ASPECT)
+    Camera(Vector3f Pos = Vector3f(0.0f, 0.0f, 0.0f), Vector3f Up = Vector3f(0.0f, 1.0f, 0.0f), float Pitch = DEF_PITCH,float Yaw = DEF_YAW) : pos(Pos),front(Vector3f(0.0f, 0.0f, -1.0f)),worldUp(Up),yaw(Yaw),pitch(Pitch) ,moveSpeed(DEF_SPEED), mouseSensitivity(DEF_SENSITIVITY), fov(DEF_FOV),nearClip(DEF_NEARCLIP),farClip(DEF_FARCLIP),aspect(DEF_ASPECT)
     {
         update();
     }
-    GiamEngine::Matrix4x4f GetViewMatrix();
-    GiamEngine::Matrix4x4f GetProjMatrix();
+    Matrix4x4f GetViewMatrix();
+    Matrix4x4f GetProjMatrix();
     void ProcessKeyboard(Camera_Movement,float deltaTime);
     void ProcessMouse(float xOffset,float yOffset);
 };
-
+NAMESPACE_GIAM_ENGINE_END
 #endif /* CAMERA_H */

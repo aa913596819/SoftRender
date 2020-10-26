@@ -9,8 +9,8 @@
 #ifndef GIQUATERNION_H
 #define GIQUATERNION_H
 #include<math.h>
-namespace GiamEngine
-{
+#include"GIMacro.h"
+NAMESPACE_GIAM_ENGINE_BEGIN
 class Quaternion
 {
 public:
@@ -136,8 +136,5 @@ inline Quaternion Inverse(const Quaternion& q)
     Quaternion conju = Conjugate(q);
     return conju/(SqrMagnitude(q));
 }
-
-
-
-}
+NAMESPACE_GIAM_ENGINE_END
 #endif /* GIQuaternion_h */

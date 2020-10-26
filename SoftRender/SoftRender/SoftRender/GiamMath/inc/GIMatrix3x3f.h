@@ -11,8 +11,8 @@
 #define GIMATRIX3X3F_H
 //#include"GIMatrix4x4f.h"
 #include"GIVector3.h"
-namespace GiamEngine
-{
+#include"GIMacro.h"
+NAMESPACE_GIAM_ENGINE_BEGIN
 class Matrix4x4f;
 class Matrix3x3f
 {
@@ -55,5 +55,5 @@ public:
 
 Matrix3x3f ElurToMatrix();
 Vector3f MatrixToEuler();
-}
-#endif /* GIMatrix3x3_hpp */
+NAMESPACE_GIAM_ENGINE_END
+#endif /* GIMatrix3x3_h */

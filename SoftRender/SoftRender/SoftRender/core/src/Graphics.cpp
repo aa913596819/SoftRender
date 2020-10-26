@@ -6,7 +6,7 @@
 //  Copyright © 2020 linweifeng. All rights reserved.
 //
 
-#include"Draw2d.h"
+#include"Graphics.h"
 #include<cmath>
 #include"GIVector3.h"
 #include"GIMatrix4x4f.h"
@@ -14,8 +14,10 @@
 #include<vector>
 #include"Camera.h"
 
+NAMESPACE_GIAM_ENGINE_BEGIN
 const static Vector4f ViewFrustum[6] =
 {
+    
     //x > -1.0
     Vector4f(1.0,0.0,0.0,1.0),
     //x < 1.0
@@ -26,7 +28,7 @@ const static Vector4f ViewFrustum[6] =
     Vector4f(0.0,1.0,0.0,1.0),
     //z <1.0
     Vector4f(0.0,0.0,-1.0,1.0),
-    //z >0.0
+    //z >-1.0
     Vector4f(0.0,0.0,1.0,1.0)
 };
 template<typename T>
@@ -43,14 +45,21 @@ void swap(int& a, int& b)
 
 bool isInside(Vector4f p,Vector4f line)
 {
-    return p.x * line.x + p.y * line.y + p.z * line.z + p.w*line.w > 0;
+    return Dot(p, line) >= 0;
 };
-//0为全部在视锥体内，1为全部在视锥体外 2为需要裁剪
-//int checkTriangle(Vector4f p0,Vector4f p1,Vector4f p2)
-//{
-//    int flag = 0;
-//    if(isInside(p0,))
-//}
+
+//输入的为裁剪坐标
+//
+bool checkTriangleOutside(Camera& cam,Vector4f p0,Vector4f p1,Vector4f p2)
+{
+    if(std::abs(p0.x)<=p0.w&&std::abs(p0.y)<=p0.w&&std::abs(p0.z)<=p0.w&&p0.w<=cam.farClip&&p0.w>=cam.nearClip)
+        return false;
+    if(std::abs(p1.x)<=p1.w&&std::abs(p1.y)<=p1.w&&std::abs(p1.z)<=p1.w&&p1.w<=cam.farClip&&p1.w>=cam.nearClip)
+        return false;
+    if(std::abs(p2.x)<=p2.w&&std::abs(p2.y)<=p2.w&&std::abs(p2.z)<=p2.w&&p2.w<=cam.farClip&&p2.w>=cam.nearClip)
+        return false;
+    return true;
+}
 
 //裁剪
 //Sutherland–Hodgman算法
@@ -68,23 +77,17 @@ void clip(std::vector<Vector4f>& vertices,std::vector<Vector3f>& normals,std::ve
 
 
     //p为裁剪空间坐标
-
-    
     auto getWeight = [](Vector4f p0, Vector4f p1,Vector4f line)
     {
-        float weight0 = p0.x * line.x + p0.y * line.y + p0.z * line.z;
-        float weight1 = p1.x * line.x + p1.y * line.y + p1.z * line.z;
-        return weight1/(weight0-weight1);
+        float weight0 = Dot(p0, line);
+        float weight1 = Dot(p1, line);
+        return weight0/(weight0-weight1);
     };
     
     //注意:这里偷了个懒，每一步用一个裁剪平面去裁剪多边形时，应该使用的是上一步裁剪得到的多边形。
     //但这里一直使用的都是原多边形。由于是锥体是一个规则的多边形，所以这样做没问题
     for(int i = 0 ; i < 6 ; i++)
     {
-        if(i ==4)
-        {
-            int a =50;
-        }
         inputVertices  = vertices;
         vertices.clear();
         inputUV = texture_coords;
@@ -102,7 +105,6 @@ void clip(std::vector<Vector4f>& vertices,std::vector<Vector3f>& normals,std::ve
                     
                     float weight = getWeight(inputVertices[LastIndex],inputVertices[j],ViewFrustum[i]);
                     Vector4f intersect = lerp(inputVertices[LastIndex],inputVertices[j],weight);
-                    inputVertices.push_back(intersect);
                     Vector3f intersectNormal = Vector3f(1.0f,1.0f,1.0f);
                     Vector2f intersectUV = lerp(inputUV[LastIndex],inputUV[j],weight);
 
@@ -119,7 +121,6 @@ void clip(std::vector<Vector4f>& vertices,std::vector<Vector3f>& normals,std::ve
             {
                 float weight = getWeight(inputVertices[LastIndex],inputVertices[j],ViewFrustum[i]);
                 Vector4f intersect = lerp(inputVertices[LastIndex],inputVertices[j],weight);
-                inputVertices.push_back(intersect);
                 Vector3f intersectNormal = lerp(inputNormal[LastIndex],inputNormal[j],weight);
                 Vector2f intersectUV = lerp(inputUV[LastIndex],inputUV[j],weight);
 
@@ -129,12 +130,7 @@ void clip(std::vector<Vector4f>& vertices,std::vector<Vector3f>& normals,std::ve
             }
         }
     }
-//    vertices.clear();
-//    vertices = inputVertices;
-//    normals.clear();
-//    normals = inputNormal;
-//    texture_coords.clear();
-//    texture_coords = inputUV;
+
 }
 
 
@@ -198,7 +194,7 @@ void drawLine(Vector2i p0,Vector2i p1,FrameBuffer &targetFrame,const Color& col)
 {
     drawLine(p0.x, p0.y, p1.x, p1.y,targetFrame,col);
 }
-void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
+void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIenum type)
 {
     Matrix4x4f modelMat4;
     modelMat4 = Matrix4x4f::Translate(Vector3f(0.0,0.0,0.0));
@@ -208,15 +204,15 @@ void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
     Matrix4x4f projectMat4 = cam.GetProjMatrix();
     
     Matrix4x4f mvp = projectMat4*viewMat4*modelMat4;
-
+    
     Vector3f light_dir(0,0,-1);
     TGAImage diffuseTex;
     diffuseTex.read_tga_file("/Users/bytedance/Desktop/african_head_diffuse.tga");
     diffuseTex.flip_vertically();
     
-
     for (int i=0; i<mesh->facesNum(); i++)
     {
+        
         std::vector<int> face = mesh->getFace(i);
         
         std::vector<Vector2f> texture_coords;
@@ -234,12 +230,11 @@ void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
 //            texture_coords[j] /=pos[j].w;
 //            pos[j].w = 1.0f/pos[j].w;
         }
-        
-        if(pos[0].z < pos[0].w)
+        if(checkTriangleOutside(cam, pos[0], pos[1], pos[2]))
         {
-            int a = 50;
+            continue;
         }
-//        clip(pos, normals, texture_coords);
+        clip(pos, normals, texture_coords);
         if(pos.size()==0)
         {
             continue;
@@ -247,10 +242,6 @@ void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
         for(int j = 0 ; j<pos.size();j++)
         {
             pos[j].PresDivision();
-            if(pos[j].z <1.0)
-            {
-                int a =50;
-            }
             texture_coords[j] /=pos[j].w;
             pos[j].w = 1.0f/pos[j].w;
         }
@@ -263,7 +254,7 @@ void drawMesh(Camera& cam,Mesh* mesh,FrameBuffer& targetFrame,GIEnum type)
 //        }
         for(int k = 0 ; k <pos.size()-2;k++)
         {
-            drawTriangle(&pos[k], &normals[k], &texture_coords[k], targetFrame, diffuseTex,k);
+            drawTriangle(pos[0],pos[k+1],pos[k+2],normals[0],normals[k+1],normals[k+2], texture_coords[0],texture_coords[k+1],texture_coords[k+2], targetFrame, diffuseTex);
         }
     }
 }
@@ -286,15 +277,16 @@ Vector3f barycentric(Vector2<T0>p0,Vector2<T0>p1,Vector2<T0>p2,Vector3<T1>p)
     return Vector3f(1.0f-(bary.x+bary.y)/bary.z, bary.y/bary.z, bary.x/bary.z);
 }
 
-void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse,int k )
+
+void drawTriangle(const Vector4f& v0,const Vector4f& v1,const Vector4f& v2,const Vector3f& normal0,const Vector3f& normal1,const Vector3f& normal2,const Vector2f& uv0,const Vector2f& uv1,const Vector2f& uv2,FrameBuffer& targetFrame,TGAImage& diffuseTex)
 {
     Vector2i bboxMin(0,0);
     Vector2i bboxMax(0,0);
     
     Vector2i screen_coords[3];
-    screen_coords[0] = Vector2i((verts[0].x+1.)*(targetFrame.getWidth()-1)/2., (verts[0].y+1.)*(targetFrame.getHeight()-1)/2.);
-    screen_coords[1] = Vector2i((verts[1].x+1.)*(targetFrame.getWidth()-1)/2., (verts[1].y+1.)*(targetFrame.getHeight()-1)/2.);
-    screen_coords[2] = Vector2i((verts[2].x+1.)*(targetFrame.getWidth()-1)/2., (verts[2].y+1.)*(targetFrame.getHeight()-1)/2.);
+    screen_coords[0] = Vector2i((v0.x+1.)*(targetFrame.getWidth()-1)/2., (v0.y+1.)*(targetFrame.getHeight()-1)/2.);
+    screen_coords[1] = Vector2i((v1.x+1.)*(targetFrame.getWidth()-1)/2., (v1.y+1.)*(targetFrame.getHeight()-1)/2.);
+    screen_coords[2] = Vector2i((v2.x+1.)*(targetFrame.getWidth()-1)/2., (v2.y+1.)*(targetFrame.getHeight()-1)/2.);
     
     bboxMin.x = std::min(screen_coords[0].x,std::min(screen_coords[1].x,screen_coords[2].x));
     bboxMin.y = std::min(screen_coords[0].y,std::min(screen_coords[1].y,screen_coords[2].y));
@@ -309,31 +301,26 @@ void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& t
             Vector3f bary =barycentric(screen_coords[0],screen_coords[1],screen_coords[2],p);
             if(bary.x>=0&&bary.y>=0&&bary.z>=0)
             {
-                float z = verts[0].z *bary.x + verts[1].z *bary.y + verts[2].z *bary.z;
+                float z = v0.z *bary.x + v1.z *bary.y + v2.z *bary.z;
                 int zIndex =p.x+p.y*targetFrame.getWidth();
                 if(targetFrame.Zbuffer[zIndex]>z)
                 {
                     Vector2i uv = Vector2i(
-                                           (uvs[0].x *bary.x + uvs[1].x *bary.y + uvs[2].x *bary.z)*(diffuse.get_width()),
-                                           (uvs[0].y *bary.x + uvs[1].y *bary.y + uvs[2].y *bary.z)*(diffuse.get_height())
+                                           (uv0.x *bary.x + uv1.x *bary.y + uv2.x *bary.z)*(diffuseTex.get_width()),
+                                           (uv0.y *bary.x + uv1.y *bary.y + uv2.y *bary.z)*(diffuseTex.get_height())
                                            );
                     
-                    float uOver1 = verts[0].w *bary.x + verts[1].w *bary.y + verts[2].w *bary.z;
+                    float uOver1 = v0.w *bary.x + v1.w *bary.y + v2.w *bary.z;
                     float u = 1.0f/uOver1;
                     uv *=u;
-                    
                     targetFrame.Zbuffer[zIndex]=z;
-                    targetFrame.drawPixel(p.x,p.y,diffuse.getColor(uv.x, uv.y));
-                    
-                    
-//                    Color color = Color(col,col,col);
-//                    targetFrame.drawPixel(p.x,p.y,color);
+                    targetFrame.drawPixel(p.x,p.y,diffuseTex.getColor(uv.x, uv.y));
+//                    targetFrame.drawPixel(p.x,p.y,Color::Red);
                 }
             }
         }
     }
 }
-
 
 void drawTriangle_scan(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuseTex)
 {
@@ -396,3 +383,11 @@ void drawTriangle_scan(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuff
 }
 
     
+
+
+void drawTriangle(Vector4f* verts,Vector3f* normals,Vector2f* uvs,FrameBuffer& targetFrame,TGAImage& diffuse)
+{
+    drawTriangle(verts[0], verts[1], verts[2], normals[0], normals[1],normals[2],uvs[0],uvs[1],uvs[2],targetFrame,diffuse);
+}
+
+NAMESPACE_GIAM_ENGINE_END

@@ -12,8 +12,8 @@
 #include <cmath>
 #include<iostream>
 #include"GIVector3.h"
-namespace GiamEngine
-{
+#include "GIMacro.h"
+NAMESPACE_GIAM_ENGINE_BEGIN
 template<typename T>
 class Vector4
 {
@@ -59,7 +59,6 @@ void Vector4<T>::PresDivision()
 //    w = 1.0f/w;
 
 }
-
 
 template<typename T>
 inline Vector4<T> operator*(T s, Vector4<T>& vec)
@@ -281,6 +280,6 @@ const inline T& Vector4<T>::operator[](const int i)const
         return w;
     }
 }
-}
+NAMESPACE_GIAM_ENGINE_END
 
 #endif /* GIVECTOR4_H */
